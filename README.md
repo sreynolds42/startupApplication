@@ -4,27 +4,34 @@
 
 This is an application that is meant to make organizing and displaying teams in companies more straightforward. It will create a card for each employee based on provided configuration and data, and allow the user to drag and drop the cards into categories they have created. 
 
-> [!NOTE]
-> This is a template for your startup application. You must modify this `README.md` file for each phase of your development. You only need to fill in the section for each deliverable when that deliverable is submitted in Canvas. Without completing the section for a deliverable, the TA will not know what to look for when grading your submission. Feel free to add additional information to each deliverable description, but make sure you at least have the list of rubric items and a description of what you did for each item.
-
-> [!NOTE]
-> If you are not familiar with Markdown then you should review the [documentation](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) before continuing.
-
 ### Elevator pitch
 
 Boardmaker will remove the tedium of having to manually create visuals for team organizations. Gone are the days of having to completely restructure a powerpoint in order to accomodate one new employee or change in leadership. Boardmaker allows for dragging and dropping of employee cards all while auto updating information.
 
 ### Design
 
-![Design image](placeholder.png)
-
-
+![Design image](board.png)
 
 ```mermaid
 sequenceDiagram
-    actor You
-    actor Website
-    You->>Website: Replace this with your design
+    actor User
+    participant Website
+    participant Service
+    participant Database
+
+    User->>Website: Log in
+    Website->>Database: Retrieve employee and category data
+    Database-->>Website: Return saved data
+    Website-->>User: Display employee cards and categories
+
+    User->>Website: Drag employee card
+    Website->>Website: Update card's category
+    Website->>Service: Save organization change
+    Service->>Database: Update employee category
+    Database-->>Service: Confirm update
+    Service-->>Website: Confirm saved change
+    Website-->>User: Display updated organization
+
 ```
 
 ### Key features
@@ -38,12 +45,13 @@ sequenceDiagram
 
 I am going to use the required technologies in the following ways.
 
-- **HTML** - Description here
-- **CSS** - Description here
-- **React** - Description here
-- **Service** - Description here
-- **DB/Login** - Description here
-- **WebSocket** - Description here
+- **HTML** - HTML will be the basic structure for the program, for the cards, containers, forms and other elements
+- **CSS** - CSS will be for the visual elements of the website and organize where things go
+- **React** - React will make the website interactive and allow the creation of cards and moving them
+- **Service** - Service is for managing communications between the website and databases for info
+- **DB/Login** - Will be used to store info so that the user can log on and off and have things saved
+- **WebSocket** - Websocket will make the page update when changes are made
+- **3rd Party API** - Dicebear will be used to generate images for employees without photos
 
 ## 🚀 Specification Deliverable
 
@@ -52,12 +60,12 @@ I am going to use the required technologies in the following ways.
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] I completed the prerequisites for this deliverable (Git commit requirement)
-- [ ] Proper use of Markdown
-- [ ] A concise and compelling elevator pitch
-- [ ] Description of key features
-- [ ] Description of how you will use each technology including your 3rd party API and use of WebSocket
-- [ ] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
+- [x] I completed the prerequisites for this deliverable (Git commit requirement)
+- [x] Proper use of Markdown
+- [x] A concise and compelling elevator pitch
+- [x] Description of key features
+- [x] Description of how you will use each technology including your 3rd party API and use of WebSocket
+- [x] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
 
 ## 🚀 AWS deliverable
 
