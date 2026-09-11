@@ -39,7 +39,7 @@ sequenceDiagram
 - Users will be able to create employee cards with photos, names, titles, levels and specialties / expertises
 - Cards will be able to be dragged and dropped, and will auto-update accordingly
 - Categories will be modifiable and configurable based on users' needs
-- All data will be stored locally in a csv file that will be updated with changes in the program
+- All data will be stored locally in a csv file that will be updated with changes in the program, as well with the option to create an account
 
 ### Technologies
 
