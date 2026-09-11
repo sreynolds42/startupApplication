@@ -1,4 +1,4 @@
-# Your startup name here
+# Boardmaker
 
 [My Notes](notes.md)
 
@@ -12,13 +12,13 @@ This is an application that is meant to make organizing and displaying teams in 
 
 ### Elevator pitch
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Boardmaker will remove the tedium of having to manually create visuals for team organizations. Gone are the days of having to completely restructure a powerpoint in order to accomodate one new employee or change in leadership. Boardmaker allows for dragging and dropping of employee cards all while auto updating information.
 
 ### Design
 
 ![Design image](placeholder.png)
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
 
 ```mermaid
 sequenceDiagram
@@ -29,9 +29,10 @@ sequenceDiagram
 
 ### Key features
 
-- Describe your key feature
-- Describe your key feature
-- Describe your key feature
+- Users will be able to create employee cards with photos, names, titles, levels and specialties / expertises
+- Cards will be able to be dragged and dropped, and will auto-update accordingly
+- Categories will be modifiable and configurable based on users' needs
+- All data will be stored locally in a csv file that will be updated with changes in the program
 
 ### Technologies
 
