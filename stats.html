@@ -3,40 +3,76 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Battle Chess - Leaderboard</title>
+  <title>Battle Chess - My Stats</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <header class="top-banner">
-    <h1>GLOBAL RANKINGS</h1>
+    <h1>COMMANDER STATS</h1>
+    <div class="user-badge">Profile: <span id="username-val" class="highlight">xXM3g@3p1cS0ulcrush1ngC0mm@nd3rX</span></div>
   </header>
 
   <main class="main-content">
-    <!-- Database Data Placeholder -->
+    <!-- Database Data Placeholder: Personal Lifetime Summary -->
     <section class="card db-card">
-      <h3>Top Commanders</h3>
+      <h3>Lifetime Combat Record</h3>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <span class="stat-label">Wins / Losses</span>
+          <span class="stat-value">42 / 18</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Win Rate</span>
+          <span class="stat-value highlight">70.0%</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Total Damage</span>
+          <span class="stat-value">14,850</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Pieces Destroyed</span>
+          <span class="stat-value">210</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Database Data Placeholder: Piece Breakdown Table -->
+    <section class="card db-card">
+      <h3>Piece Kills & Performance</h3>
       <table class="db-table">
         <thead>
           <tr>
-            <th>Rank</th>
-            <th>Player</th>
-            <th>Wins</th>
-            <th>Damage</th>
+            <th>Piece</th>
+            <th>Kills</th>
+            <th>Avg DMG</th>
+            <th>Fav Ability</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>#1</td>
-            <td>GrandmasterX</td>
-            <td>142</td>
-            <td>45,200</td>
+            <td>♟️ Pawn</td>
+            <td>84</td>
+            <td>120</td>
+            <td>Ignite</td>
           </tr>
           <tr>
-            <td>#2</td>
-            <td>RookMaster</td>
-            <td>118</td>
-            <td>38,900</td>
+            <td>♞ Knight</td>
+            <td>52</td>
+            <td>340</td>
+            <td>Echo</td>
+          </tr>
+          <tr>
+            <td>♜ Rook</td>
+            <td>41</td>
+            <td>510</td>
+            <td>Ignite</td>
+          </tr>
+          <tr>
+            <td>♛ Queen</td>
+            <td>33</td>
+            <td>890</td>
+            <td>Echo</td>
           </tr>
         </tbody>
       </table>
