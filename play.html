@@ -9,7 +9,10 @@
 <body>
 
   <header class="top-banner">
-    <h1>ECHO IGNITION</h1>
+    <div class="header-main">
+      <h1>ECHO IGNITION</h1>
+      <button class="btn-puzzle-header" onclick="alert('Daily Puzzle API call placeholder')">🧩 Daily Puzzle</button>
+    </div>
     <div class="game-status">Turn: <span class="highlight">Player 1</span></div>
   </header>
 
@@ -28,11 +31,10 @@
       </div>
     </section>
 
-    <!-- Ability Controls & Daily Puzzle Button Placeholder -->
+    <!-- Ability Controls -->
     <section class="ability-bar">
       <button class="btn-ability">Echo</button>
       <button class="btn-ability btn-ignite">Ignite</button>
-      <button class="btn-ability btn-puzzle" onclick="alert('Daily Puzzle API call placeholder')">Daily Puzzle</button>
     </section>
 
     <!-- WebSocket Data Placeholder: Live Feed & Chat -->
