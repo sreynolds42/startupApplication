@@ -11,15 +11,50 @@
   <!-- Top Header Banner -->
   <header class="top-banner">
     <h1>ECHO IGNITION</h1>
+    <!-- Login placeholder user display -->
+    <div id="user-display" class="user-badge">Logged in as: <span id="username-val" class="highlight">Guest</span></div>
   </header>
 
-  <!-- Main Hero / Content Section -->
+  <!-- Content Section -->
   <main class="main-content">
     <div class="hero-card">
       <h2>stuff goes here ig</h2>
       <p>some quirky and cool text here</p>
     </div>
+
+
+<!-- Authentication Placeholder -->
+    <section class="card auth-card">
+      <h2>Account Access</h2>
+      <form action="play.html" method="get">
+        <div class="input-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" placeholder="Enter commander name" required>
+        </div>
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="••••••••" required>
+        </div>
+        <div class="auth-buttons">
+          <button type="submit" class="btn-sub">Login</button>
+          <button type="button" class="btn-sub btn-alt">Register</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- 3rd Party Service Call Placeholder -->
+    <section class="card service-card">
+      <h3>Tactical Wisdom</h3>
+      <p id="third-party-quote"><em>"Loading daily chess grandmaster quote..."</em></p>
+      <span class="api-tag">3rd Party Service Placeholder</span>
+    </section>
+
   </main>
+
+  <!-- Mandatory Footer with Author Name and GitHub Link -->
+  <footer class="site-footer">
+    <p>Author: <strong>Your Name Here</strong> | <a href="https://github.com/YOUR-GITHUB-USERNAME/YOUR-REPO-NAME" target="_blank">GitHub Repository</a></p>
+  </footer>
 
   <!-- Bottom Action Banner / Navigation -->
   <nav class="bottom-banner">

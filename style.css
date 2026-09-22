@@ -119,3 +119,31 @@ body {
 .btn-primary:hover {
   background-color: #f7d036;
 }
+/* App Image Styling */
+.app-logo {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
+  border: 1px solid #333;
+}
+
+/* Site Footer */
+.site-footer {
+  background-color: #121212;
+  text-align: center;
+  padding: 0.75rem;
+  font-size: 0.8rem;
+  color: #888;
+  border-top: 1px solid #222;
+  margin-bottom: 70px; /* Space above fixed bottom navigation */
+}
+
+.site-footer a {
+  color: #e2b714;
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  text-decoration: underline;
+}
