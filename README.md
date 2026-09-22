@@ -1,16 +1,16 @@
-# Boardmaker
+# Echo Ignition
 
 [My Notes](notes.md)
 
-This is an application that is meant to make organizing and displaying teams in companies more straightforward. It will create a card for each employee based on provided configuration and data, and allow the user to drag and drop the cards into categories they have created. 
+This is a chess game app where you play on a grid, use special moves, and hit things. You can log in, look at your stats, and solve chess puzzles.
 
 ### Elevator pitch
 
-Boardmaker will remove the tedium of having to manually create visuals for team organizations. Gone are the days of having to completely restructure a powerpoint in order to accomodate one new employee or change in leadership. Boardmaker allows for dragging and dropping of employee cards all while auto updating information.
+Normal chess gets boring when people take forever to move. Echo Ignition adds buttons like "Echo" and "Ignite" so you can blow stuff up instead of just waiting around. It also has a live feed and daily puzzles.
 
 ### Design
 
-![Design image](board.png)
+![Design image](echoignitionLogoPlaceholder.png)
 
 ```mermaid
 sequenceDiagram
@@ -20,26 +20,27 @@ sequenceDiagram
     participant Database
 
     User->>Website: Log in
-    Website->>Database: Retrieve employee and category data
-    Database-->>Website: Return saved data
-    Website-->>User: Display employee cards and categories
+    Website->>Database: Get user stats
+    Database-->>Website: Give back stats
+    Website-->>User: Show board and buttons
 
-    User->>Website: Drag employee card
-    Website->>Website: Update card's category
-    Website->>Service: Save organization change
-    Service->>Database: Update employee category
-    Database-->>Service: Confirm update
-    Service-->>Website: Confirm saved change
-    Website-->>User: Display updated organization
+    User->>Website: Click Ignite
+    Website->>Website: Change board
+    Website->>Service: Save the move
+    Service->>Database: Put move in DB
+    Database-->>Service: Say okay
+    Service-->>Website: Send to feed
+    Website-->>User: Show new feed text
 
 ```
 
 ### Key features
 
-- Users will be able to create employee cards with photos, names, titles, levels and specialties / expertises
-- Cards will be able to be dragged and dropped, and will auto-update accordingly
-- Categories will be modifiable and configurable based on users' needs
-- All data will be stored locally in a csv file that will be updated with changes in the program, as well with the option to create an account
+- A chess board with health numbers on pieces
+- Buttons for special moves like Echo and Ignite
+- A box that shows live messages using WebSockets
+- A stats page that shows if you are winning or losing
+- A button that gets a daily puzzle from Lichess
 
 ### Technologies
 
@@ -80,15 +81,15 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
 - [x] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
-- [x] **HTML pages** - I did not complete this part of the deliverable.
-- [x] **Proper HTML element usage** - I did not complete this part of the deliverable.
-- [x] **Links** - I did not complete this part of the deliverable.
-- [x] **Text** - I did not complete this part of the deliverable.
-- [x] **3rd party API placeholder** - I did not complete this part of the deliverable.
-- [x] **Images** - I did not complete this part of the deliverable.
-- [x] **Login placeholder** - I did not complete this part of the deliverable.
-- [x] **DB data placeholder** - I did not complete this part of the deliverable.
-- [x] **WebSocket placeholder** - I did not complete this part of the deliverable.
+- [x] **HTML pages** - I made 4 pages, the homepage, a play page, a help page and a stats page.
+- [x] **Proper HTML element usage** - I used HTML to make things.
+- [x] **Links** - There are buttons that lead to each page at the bottom of each page.
+- [x] **Text** - There is text. Not meaningful text, but there is text.
+- [x] **3rd party API placeholder** - On the play page, i put a button that will lead to a daily chess puzzle using the Lichess daily puzzle api.
+- [x] **Images** - I created a masterpiece for my placeholder logo.
+- [x] **Login placeholder** - There is a placeholder login on the landing page.
+- [x] **DB data placeholder** - The stats page will contain play stats based on what you have done.
+- [x] **WebSocket placeholder** - On the play page, there is a live feed for what's going on.
 
 ## 🚀 CSS deliverable
 
