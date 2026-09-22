@@ -128,7 +128,7 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 1.25rem;
-  margin-bottom: 80px; /* Offset for fixed bottom navigation bar */
+  margin-bottom: 90px; /* Offset for fixed bottom navigation bar */
 }
 
 .card {
@@ -157,11 +157,14 @@ body {
 }
 
 .app-logo {
-  width: 100px;
-  height: 100px;
-  border-radius: 12px;
-  margin-bottom: 0.75rem;
+  width: 100%;
+  max-width: 280px;      /* Restricts logo width inside cards */
+  height: auto;          /* Maintains original aspect ratio */
+  border-radius: 8px;    /* Subtle rounded corners */
   border: 1px solid #333;
+  background-color: #fff;/* Adds white background if canvas is transparent */
+  display: block;
+  margin: 0 auto 0.75rem auto; /* Centers the image */
 }
 
 /* API & Technology Tags */
@@ -326,11 +329,11 @@ body {
 .site-footer {
   background-color: #121212;
   text-align: center;
-  padding: 0.75rem;
+  padding: 1rem 0.75rem;
   font-size: 0.8rem;
   color: #888;
   border-top: 1px solid #222;
-  margin-bottom: 70px; /* Offset above fixed bottom banner */
+  margin-bottom: 100px; /* Elevated offset so author credit never clips with fixed bottom banner */
   width: 100%;
 }
 
