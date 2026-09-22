@@ -17,18 +17,29 @@
     <!-- Application Data Placeholder: Interactive Game Board -->
     <section class="board-container">
       <div class="chess-board">
+        <div class="square dark"><span class="piece">♟️<br><small>HP:10</small></span></div>
+        <div class="square light"></div>
+        <div class="square dark"></div>
+        <div class="square light"><span class="piece">♞<br><small>HP:25</small></span></div>
+        <div class="square light"></div>
+        <div class="square dark"></div>
+        <div class="square light"></div>
+        <div class="square dark"></div>
       </div>
     </section>
 
-    <!-- Ability Controls -->
+    <!-- Ability Controls & Daily Puzzle Button Placeholder -->
     <section class="ability-bar">
-        <!-- stuff goes here -->>
+      <button class="btn-ability">Echo</button>
+      <button class="btn-ability btn-ignite">Ignite</button>
+      <button class="btn-ability btn-puzzle" onclick="alert('Daily Puzzle API call placeholder')">Daily Puzzle</button>
     </section>
 
     <!-- WebSocket Data Placeholder: Live Feed & Chat -->
     <section class="card websocket-card">
       <h3>Feed</h3>
       <div class="feed-box">
+        <p class="ws-msg">⚡ [WebSocket] Connected to game lobby.</p>
       </div>
     </section>
   </main>
