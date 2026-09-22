@@ -8,55 +8,35 @@
 </head>
 <body>
 
-  <!-- Top Header Banner -->
+  <!-- Compact Header Banner with Integrated Login -->
   <header class="top-banner">
     <h1>ECHO IGNITION</h1>
-    <!-- Login placeholder user display -->
-    <div id="user-display" class="user-badge">Logged in as: <span id="username-val" class="highlight">Guest</span></div>
+    
+    <!-- Compact Top Login Form -->
+    <div class="header-auth">
+      <form action="play.html" method="get" class="compact-auth-form">
+        <input type="text" id="username" name="username" placeholder="User" required>
+        <input type="password" id="password" name="password" placeholder="Pass" required>
+        <button type="submit" class="btn-compact">Login</button>
+      </form>
+      <div id="user-display" class="user-badge">Status: <span id="username-val" class="highlight">Guest</span></div>
+    </div>
   </header>
 
-  <!-- Content Section -->
+  <!-- Main Content -->
   <main class="main-content">
-    <div class="hero-card">
-      <h2>stuff goes here ig</h2>
-      <p>some quirky and cool text here</p>
+    
+    <!-- Hero Card with Logo -->
+    <div class="card hero-card">
+      <img src="https://via.placeholder.com/150/1e1e24/e2b714?text=Echo+Ignition" alt="Echo Ignition Logo" class="app-logo">
+      <h2>Cool text</h2>
+      <p>More cool text</p>
     </div>
 
 
-<!-- Authentication Placeholder -->
-    <section class="card auth-card">
-      <h2>Account Access</h2>
-      <form action="play.html" method="get">
-        <div class="input-group">
-          <label for="username">Username</label>
-          <input type="text" id="username" name="username" placeholder="Enter commander name" required>
-        </div>
-        <div class="input-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" name="password" placeholder="••••••••" required>
-        </div>
-        <div class="auth-buttons">
-          <button type="submit" class="btn-sub">Login</button>
-          <button type="button" class="btn-sub btn-alt">Register</button>
-        </div>
-      </form>
-    </section>
-
-    <!-- 3rd Party Service Call Placeholder -->
-    <section class="card service-card">
-      <h3>Tactical Wisdom</h3>
-      <p id="third-party-quote"><em>"Loading daily chess grandmaster quote..."</em></p>
-      <span class="api-tag">3rd Party Service Placeholder</span>
-    </section>
-
   </main>
 
-  <!-- Mandatory Footer with Author Name and GitHub Link -->
-  <footer class="site-footer">
-    <p>Author: <strong>Your Name Here</strong> | <a href="https://github.com/YOUR-GITHUB-USERNAME/YOUR-REPO-NAME" target="_blank">GitHub Repository</a></p>
-  </footer>
-
-  <!-- Bottom Action Banner / Navigation -->
+  <!-- Bottom Navigation -->
   <nav class="bottom-banner">
     <a href="help.html" class="nav-btn btn-secondary">HELP</a>
     <a href="play.html" class="nav-btn btn-primary">PLAY</a>
