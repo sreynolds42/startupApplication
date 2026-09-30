@@ -9,21 +9,20 @@
 <body>
 
   <header class="top-banner">
-    <div class="header-main">
       <h1>ECHO IGNITION</h1>
-      <button class="btn-puzzle-header" onclick="alert('Daily Puzzle API call placeholder')">🧩 Daily Puzzle</button>
-    </div>
+      <button class="btn-puzzle-header" onclick="alert('Daily Puzzle API call placeholder')">Daily Puzzle</button>
     <div class="game-status">Turn: <span class="highlight">Player 1</span></div>
   </header>
 
   <main class="main-content play-layout">
-    <!-- Application Data Placeholder: Interactive Game Board -->
+    <!-- Board Placeholder -->
     <section class="board-container">
       <div class="chess-board">
-        <div class="square dark"><span class="piece">♟️<br><small>HP:10</small></span></div>
+        <!-- Will eventually replace numbers with a bar, so fancy formatting for hp isnt really necessary atm-->
+        <div class="square dark">♟️</div>
         <div class="square light"></div>
         <div class="square dark"></div>
-        <div class="square light"><span class="piece">♞<br><small>HP:25</small></span></div>
+        <div class="square light">♞</div>
         <div class="square light"></div>
         <div class="square dark"></div>
         <div class="square light"></div>
@@ -31,17 +30,17 @@
       </div>
     </section>
 
-    <!-- Ability Controls -->
+    <!-- Ability Buttons -->
     <section class="ability-bar">
       <button class="btn-ability">Echo</button>
-      <button class="btn-ability btn-ignite">Ignite</button>
+      <button class="btn-ability">Ignite</button>
     </section>
 
-    <!-- WebSocket Data Placeholder: Live Feed & Chat -->
+    <!-- WebSocket Data Placeholder: Feed + Player to player chat -->
     <section class="card websocket-card">
       <h3>Feed</h3>
       <div class="feed-box">
-        <p class="ws-msg">⚡ [WebSocket] Connected to game lobby.</p>
+        <p class="ws-msg">Websocket Chat</p>
       </div>
     </section>
   </main>
