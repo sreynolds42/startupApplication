@@ -188,12 +188,11 @@ body {
 
 .chess-board {
   display: grid;
-  grid-template-columns: repeat(8, 65px);
-  grid-template-rows: repeat(8, 65px);
-
-  border: 2px solid #444;
-  margin-bottom: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: 100%;
+  max-width: 480px; 
+  aspect-ratio: 1 / 1
 }
 
 .square {
@@ -201,7 +200,12 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-size: 0.75rem;
+  font-size: 4.0rem;
+
+  min-width: 0;
+  min-width: 0;
+  overflow: hidden;
+
 }
 
 .square .piece {
