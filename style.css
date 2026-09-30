@@ -188,8 +188,9 @@ body {
 
 .chess-board {
   display: grid;
-  grid-template-columns: repeat(4, 65px);
-  grid-template-rows: repeat(4, 65px);
+  grid-template-columns: repeat(8, 65px);
+  grid-template-rows: repeat(8, 65px);
+
   border: 2px solid #444;
   margin-bottom: 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
