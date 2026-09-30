@@ -1,6 +1,4 @@
-/* ==========================================================================
-   1. Reset & Base Layout
-   ========================================================================== */
+/* base layout */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -16,9 +14,7 @@ body {
   min-height: 100vh;
 }
 
-/* ==========================================================================
-   2. Compact Top Banner Header & Integrated Login
-   ========================================================================== */
+/* banner header and login */
 .top-banner {
   background-color: #1e1e24;
   text-align: center;
@@ -44,7 +40,7 @@ body {
   text-transform: uppercase;
 }
 
-/* Discrete Header Puzzle Button */
+
 .btn-puzzle-header {
   position: absolute;
   right: 0;
@@ -90,7 +86,7 @@ body {
   border: 1px solid #444;
   background-color: #121212;
   color: #fff;
-  min-width: 0; /* Prevents input overflow on small screens */
+  min-width: 0;
 }
 
 .btn-compact {
@@ -119,9 +115,7 @@ body {
   color: #e2b714;
 }
 
-/* ==========================================================================
-   3. Main Content & Cards Layout
-   ========================================================================== */
+/* Main Content and the layout of cards */
 .main-content {
   flex: 1;
   display: flex;
@@ -147,13 +141,12 @@ body {
 
 .app-logo {
   width: 100%;
-  max-width: 280px;      /* Restricts logo width inside cards */
-  height: auto;          /* Maintains original aspect ratio */
-  border-radius: 8px;    /* Subtle rounded corners */
+  max-width: 280px;    
+  height: auto;       
+  border-radius: 8px;
   border: 1px solid #333;
-  background-color: #fff;/* Adds white background if canvas is transparent */
   display: block;
-  margin: 0 auto 0.75rem auto; /* Centers the image */
+  margin: 0 auto 0.75rem auto;
 }
 
 /* API & Technology Tags */
@@ -167,9 +160,7 @@ body {
   margin-top: 0.75rem;
 }
 
-/* ==========================================================================
-   4. Gameplay Elements (play.html)
-   ========================================================================== */
+/*play.html*/
 .play-layout {
   flex-direction: column;
   align-items: center;
@@ -257,9 +248,7 @@ body {
   margin-bottom: 0.25rem;
 }
 
-/* ==========================================================================
-   5. Database Data & Personal Stats Dashboard (stats.html)
-   ========================================================================== */
+/*(stats.html)*/
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -309,16 +298,7 @@ body {
   color: #e2b714;
 }
 
-/* ==========================================================================
-   6. Rules & Footer (help.html)
-   ========================================================================== */
-.help-list {
-  text-align: left;
-  padding-left: 1.2rem;
-  line-height: 1.6;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-}
+/*Rules & Footer (help.html)*/
 
 .site-footer {
   background-color: #121212;
@@ -327,7 +307,7 @@ body {
   font-size: 0.8rem;
   color: #888;
   border-top: 1px solid #222;
-  margin-bottom: 100px; /* Elevated offset so author credit never clips with fixed bottom banner */
+  margin-bottom: 80px;
   width: 100%;
 }
 
@@ -340,9 +320,7 @@ body {
   text-decoration: underline;
 }
 
-/* ==========================================================================
-   7. Bottom Banner Navigation Bar
-   ========================================================================== */
+/* nav bar in the bottom*/
 .bottom-banner {
   position: fixed;
   bottom: 0;
