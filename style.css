@@ -145,17 +145,6 @@ body {
   text-align: center;
 }
 
-.hero-card h2 {
-  margin-bottom: 0.5rem;
-  color: #ffffff;
-}
-
-.hero-card p {
-  color: #a0a0a0;
-  font-size: 0.95rem;
-  line-height: 1.4;
-}
-
 .app-logo {
   width: 100%;
   max-width: 280px;      /* Restricts logo width inside cards */
