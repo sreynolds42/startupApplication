@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Echo Ignition - My Stats</title>
+  <!-- Bootstrap CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,72 +15,72 @@
     <div class="user-badge">Profile: <span id="username-val" class="highlight">Guest</span></div>
   </header>
 
-  
-
   <main class="main-content">
     <!-- placeholder for account stats -->
-    <section class="card db-card">
-      <h3>Lifetime Combat Record</h3>
+    <section class="card db-card text-white">
+      <h3 class="text-warning h5">Lifetime Combat Record</h3>
       <div class="stats-grid">
-        <div class="stat-box">
-          <span class="stat-label">Wins / Losses: </span>
+        <div class="stat-box text-light">
+          <span class="stat-label text-light">Wins / Losses: </span>
           <span class="stat-value highlight">42 / 18</span>
         </div>
-        <div class="stat-box">
-          <span class="stat-label">Win Rate: </span>
+        <div class="stat-box text-light">
+          <span class="stat-label text-light">Win Rate: </span>
           <span class="stat-value highlight">40.0%</span>
         </div>
-        <div class="stat-box">
-          <span class="stat-label">Total Damage: </span>
+        <div class="stat-box text-light">
+          <span class="stat-label text-light">Total Damage: </span>
           <span class="stat-value highlight">14,850</span>
         </div>
-        <div class="stat-box">
-          <span class="stat-label">Pieces Destroyed: </span>
+        <div class="stat-box text-light">
+          <span class="stat-label text-light">Pieces Destroyed: </span>
           <span class="stat-value highlight">210</span>
         </div>
       </div>
     </section>
 
     <!-- piece stats placeholder data -->
-    <section class="card db-card">
-      <h3>Piece Kills & Performance</h3>
-      <table class="table table-dark table-striped align-middle mb-2 text-warning">
-        <thead>
-          <tr>
-            <th>Piece</th>
-            <th>Kills</th>
-            <th>Avg DMG</th>
-            <th>Fav Ability</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Pawn</td>
-            <td>84</td>
-            <td>120</td>
-            <td>Ignite</td>
-          </tr>
-          <tr>
-            <td>Knight</td>
-            <td>52</td>
-            <td>340</td>
-            <td>Echo</td>
-          </tr>
-          <tr>
-            <td>Rook</td>
-            <td>41</td>
-            <td>510</td>
-            <td>Ignite</td>
-          </tr>
-          <tr>
-            <td>Queen</td>
-            <td>33</td>
-            <td>890</td>
-            <td>Echo</td>
-          </tr>
-        </tbody>
-      </table>
-      <span class="api-tag">Database Data Placeholder</span>
+    <section class="card db-card text-white">
+      <h3 class="text-warning h5">Piece Kills & Performance</h3>
+      <div class="table-responsive">
+        <table class="table table-dark table-striped align-middle mb-2 text-warning" style="font-size: 0.6rem;">
+          <thead>
+            <tr>
+              <th>Piece</th>
+              <th>Kills</th>
+              <th>Avg DMG</th>
+              <th>Fav Ability</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Pawn</td>
+              <td>84</td>
+              <td>120</td>
+              <td>Ignite</td>
+            </tr>
+            <tr>
+              <td>Knight</td>
+              <td>52</td>
+              <td>340</td>
+              <td>Echo</td>
+            </tr>
+            <tr>
+              <td>Rook</td>
+              <td>41</td>
+              <td>510</td>
+              <td>Ignite</td>
+            </tr>
+            <tr>
+              <td>Queen</td>
+              <td>33</td>
+              <td>890</td>
+              <td>Echo</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <span class="api-tag text-secondary">Database Data Placeholder</span>
     </section>
   </main>
 

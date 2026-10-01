@@ -95,13 +95,13 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
-- [ ] **Visually appealing colors and layout. No overflowing elements.** - I did not complete this part of the deliverable.
-- [ ] **Use of a CSS framework** - I did not complete this part of the deliverable.
-- [ ] **All visual elements styled using CSS** - I did not complete this part of the deliverable.
-- [ ] **Responsive to window resizing using flexbox and/or grid display** - I did not complete this part of the deliverable.
-- [ ] **Use of a imported font** - I did not complete this part of the deliverable.
-- [ ] **Use of different types of selectors including element, class, ID, and pseudo selectors** - I did not complete this part of the deliverable.
+- [x] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
+- [x] **Visually appealing colors and layout. No overflowing elements.** - I made the full board with the pieces and appropriately colored buttons
+- [x] **Use of a CSS framework** - I have a css file along with bootstrap for styling and making buttons
+- [x] **All visual elements styled using CSS** - Most everything is styled using css or bootstrap
+- [x] **Responsive to window resizing using flexbox and/or grid display** - The app scales using flexbox and the 8x8 chess grid also scales
+- [x] **Use of a imported font** - I used the player 2 font for a more game-ey look
+- [x] **Use of different types of selectors including element, class, ID, and pseudo selectors** - I used all the elements in style.css
 
 ## 🚀 React part 1: Routing deliverable
 
