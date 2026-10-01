@@ -4,13 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Echo Ignition - Play</title>
+  <!-- Bootstrap CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <header class="top-banner">
-      <h1>ECHO IGNITION</h1>
-      <button class="btn-puzzle-header">Daily Puzzle</button>
+    <h1>ECHO IGNITION</h1>
+    <button class="btn btn-sm btn-outline-warning text-white position-absolute end-0 top-50 translate-middle-y me-2">Daily Puzzle</button>
     <div class="game-status">Turn: <span class="highlight">Player 1</span></div>
   </header>
 
@@ -18,8 +20,7 @@
     <!-- Board Placeholder -->
     <section class="board-container">
       <div class="chess-board">
-        <!-- Will eventually replace numbers with a bar, so fancy formatting for hp isnt really necessary atm-->
-         <!-- row 1 -->
+        <!-- row 1 -->
         <div class="square dark">♜</div>
         <div class="square light">♞</div>
         <div class="square dark">♝</div>
@@ -91,26 +92,21 @@
         <div class="square dark">♝</div>
         <div class="square light">♞</div>
         <div class="square dark">♜</div>
-
-        
       </div>
     </section>
 
     <!-- Ability Buttons -->
-  <div class="btn-group my-3" role="group" style="width: 5%; max-width: 380px; size: 150%">
-    <!-- making the buttons blue and red for a abilities-->
-    <button type="button" class="btn btn-large text-white fw-bold" style="background-color: #0d6efd; border-color: #0db9fd;">Echo</button>
-    <button type="button" class="btn btn-large text-white fw-bold" style="background-color: #dc3545; border-color: #dc3545;">Ignite</button>
-</div>
+    <div class="btn-group my-3 w-100" role="group" style="max-width: 380px;">
+      <button type="button" class="btn btn-lg text-white fw-bold" style="background-color: #0d6efd; border-color: #0d6efd;">Echo</button>
+      <button type="button" class="btn btn-lg text-white fw-bold" style="background-color: #dc3545; border-color: #dc3545;">Ignite</button>
+    </div>
 
     <!-- Feed + Player to player chat -->
-  <section class="card websocket-card">
-    <div class="feed-box">
-      <p class="ws-msg">Websocket Chat</p>
-    </div>
-  </section>
-
-    
+    <section class="card websocket-card">
+      <div class="feed-box">
+        <p class="ws-msg mb-0">Websocket Chat</p>
+      </div>
+    </section>
   </main>
 
   <nav class="bottom-banner">
