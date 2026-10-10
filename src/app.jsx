@@ -9,22 +9,17 @@ import './app.css';
 
 function NavContent() {
   const location = useLocation();
-  // this is to keep the functionality of the button that swaps between home and play
-  // ideally, once logged in, the home page would be useless and just redirect to play, so this is placeholder until login functionality is fully implemented.
-  const isHome = location.pathname === '/home';
+    // this is to keep the functionality of the button that swaps between home and play
+  // ideally, once logged in, the home page would be useless and just redirect to play, so this is placeholder until login functionality is implemented
+  const isPlay = location.pathname === '/play';
 
   return (
     <nav className="bottom-banner">
       <NavLink className="nav-btn btn-secondary" to="help">HELP</NavLink>
-      
-      {isHome ? (
-        // an if function to check if the page is home, if so it shows play
-        <NavLink className="nav-btn btn-primary" to="">PLAY</NavLink>
-        
-        
+      {isPlay ? (
+        <NavLink className="nav-btn btn-primary" to="">HOME</NavLink>
       ) : (
-        // if else, it doesnt.
-        <NavLink className="nav-btn btn-primary" to="play">HOME</NavLink>
+        <NavLink className="nav-btn btn-primary" to="play">PLAY</NavLink>
       )}
       <NavLink className="nav-btn btn-secondary" to="stats">STATS</NavLink>
     </nav>

@@ -108,9 +108,9 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
 - [x] I deployed simon, have lots of git commits, and have my github link in my website
-- [x] **Bundled using Vite** - I have succesfully bundled my website with vite based on the simon example
+- [x] **Bundled using Vite** - I have succesfully bundled my website with vite based on the simon example.
 - [x] **Components** - I moved my html details to jsx files like in the simon demo
-- [x] **Router** - I made the buttons at the bottom route to each other instead of redirect
+- [x] **Router** - I made the buttons at the bottom route to each other instead of redirect.
 
 ## 🚀 React part 2: Reactivity deliverable
 
