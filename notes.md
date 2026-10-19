@@ -3,6 +3,8 @@
 This file represents what I have learned about web programming.
 I love web programming
 
+Use async and await for asynchronous stuff, it simplifies code
+
 - [My startup](https://startup.echoignition.click)
 - [My simon](https://simon.echoignition.click)
 
