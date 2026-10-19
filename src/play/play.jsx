@@ -1,6 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export function Play() {
+  // state manager for the daily puzzle API
+  const [puzzleData, setPuzzleData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // fetching the puzzle from the api via lichess
+  const fetchDailyPuzzle = async () => {
+    setLoading(true);
+    setError(null);
+    try{
+      // try getting the api
+      const response = await fetch('https://lichess.org/api/puzzle/daily');
+      // if it fails
+      if (!response.ok){
+        throw new Error('Failed to get daily puzzle');
+      }
+      // using await to not clog up time waiting
+      const data = await response.json();
+      setPuzzleData(data);
+    } catch (err){
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="main-content play-layout">
       <button className="btn btn-sm btn-outline-warning text-white position-absolute end-0 top-50 translate-middle-y me-2">Daily Puzzle</button>
