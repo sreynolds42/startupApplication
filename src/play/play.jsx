@@ -29,6 +29,7 @@ export function Play() {
 
   return (
     <main className="main-content play-layout">
+      {/* still have to implement button affecting game, will do that once game is implemented*/}
       <button className="btn btn-sm btn-outline-warning text-white position-absolute end-0 top-50 translate-middle-y me-2">Daily Puzzle</button>
       <div className="game-status">Turn: <span className="highlight">Guest</span></div>
 
