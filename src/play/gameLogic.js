@@ -7,12 +7,12 @@ export function createInitialBoard() {
   const backRank = ['rook', 'knight', 'bishop', 'king', 'queen', 'bishop', 'knight', 'rook'];
   
   const baseStats = {
-    pawn:   { hp: 10, maxHp: 10, attack: 3 },
-    knight: { hp: 20, maxHp: 20, attack: 5 },
-    bishop: { hp: 20, maxHp: 20, attack: 5 },
-    rook:   { hp: 30, maxHp: 30, attack: 8 },
-    queen:  { hp: 40, maxHp: 40, attack: 12 },
-    king:   { hp: 50, maxHp: 50, attack: 4 },
+    pawn:   { hp: 5, maxHp: 5, attack: 3 },
+    knight: { hp: 15, maxHp: 15, attack: 15 },
+    bishop: { hp: 10, maxHp: 10, attack: 15 },
+    rook:   { hp: 20, maxHp: 20, attack: 5 },
+    queen:  { hp: 15, maxHp: 15, attack: 20 },
+    king:   { hp: 50, maxHp: 50, attack: 20 },
   };
 
   const pieceSymbols = {
