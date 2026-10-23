@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 export function Stats() {
+  const [username, setUsername] = useState('Guest');
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('userName');
+    if (savedUser) {
+      setUsername(savedUser);
+    }
+  }, []);
+
   return (
     <main className="main-content">
-      <div className="user-badge mb-2">Profile: <span id="username-val" className="highlight">Guest</span></div>
+      <div className="user-badge mb-2">Profile: <span id="username-val" className="highlight">{username}</span></div>
 
-      {/* placeholder for account stats */}
       <section className="card db-card text-white">
         <h3 className="text-warning h5">Lifetime Combat Record</h3>
         <div className="stats-grid">
@@ -15,7 +23,7 @@ export function Stats() {
           </div>
           <div className="stat-box text-light">
             <span className="stat-label text-light">Win Rate: </span>
-            <span className="stat-value highlight">40.0%</span>
+            <span className="stat-value highlight">70.0%</span>
           </div>
           <div className="stat-box text-light">
             <span className="stat-label text-light">Total Damage: </span>
@@ -28,7 +36,6 @@ export function Stats() {
         </div>
       </section>
 
-      {/* piece stats placeholder data */}
       <section className="card db-card text-white">
         <h3 className="text-warning h5">Piece Kills & Performance</h3>
         <div className="table-responsive">
