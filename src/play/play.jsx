@@ -112,6 +112,31 @@ export function Play() {
   // reads the current user and gets their username, if not it's guest
   const username = localStorage.getItem('userName') || 'Guest';
 
+  // this updates the stats of the players as stuff goes on
+  const updatePlayerStats = (damageDealt, pieceDestroyed = null) => {
+    if (username === 'Guest') return; // only tracks for logged in players
+
+    const statsKey = `stats_${username}`;
+    const existingStats = JSON.parse(localStorage.getItem(statsKey)) || {
+      wins: 0,
+      losses: 0,
+      totalDamage: 0,
+      piecesDestroyed: 0,
+      pieceKills: { Pawn: 0, Knight: 0, Bishop: 0, Rook: 0, Queen: 0 }
+    };
+
+    existingStats.totalDamage += damageDealt;
+    if (pieceDestroyed) {
+      existingStats.piecesDestroyed += 1;
+      const pieceName = pieceDestroyed.type.charAt(0).toUpperCase() + pieceDestroyed.type.slice(1);
+      if (existingStats.pieceKills[pieceName] !== undefined) {
+        existingStats.pieceKills[pieceName] += 1;
+      }
+    }
+
+    localStorage.setItem(statsKey, JSON.stringify(existingStats));
+  };
+
   // websocket for chat and turn stuff, dummy data for now.
   useEffect(() => {
     const mockUsers = ['xXDarkMaster69420Xx', 'ChessSl@y3r99', 'Omega master'];
@@ -191,8 +216,11 @@ export function Play() {
 
     if (activeAbility === 'echo') {
       if (target) {
+        const damageDealt = Math.min(target.hp, attacker.attack);
         target.hp -= attacker.attack;
-        if (target.hp <= 0) newBoard[rowIndex][colIndex] = null;
+        const isKilled = target.hp <= 0;
+        if (isKilled) newBoard[rowIndex][colIndex] = null;
+        updatePlayerStats(damageDealt, isKilled ? target : null);
         actionLog = `${attacker.color} ${attacker.type} echoed from ${fromSquare} targeting ${toSquare} for ${attacker.attack} DMG!`;
       } else {
         actionLog = `${attacker.color} ${attacker.type} echoed towards ${toSquare} but hit nothing!`;
@@ -204,8 +232,11 @@ export function Play() {
           const victim = newBoard[r][c];
           if (victim) {
             const dmg = (r === rowIndex && c === colIndex) ? attacker.attack : splashDmg;
+            const damageDealt = Math.min(victim.hp, dmg);
             victim.hp -= dmg;
-            if (victim.hp <= 0) newBoard[r][c] = null;
+            const isKilled = victim.hp <= 0;
+            if (isKilled) newBoard[r][c] = null;
+            updatePlayerStats(damageDealt, isKilled ? victim : null);
           }
         }
       }
@@ -217,14 +248,17 @@ export function Play() {
     } else {
       if (target) {
         if (target.color !== attacker.color) {
+          const damageDealt = Math.min(target.hp, attacker.attack);
           target.hp -= attacker.attack;
-          if (target.hp <= 0) {
+          const isKilled = target.hp <= 0;
+          if (isKilled) {
             newBoard[rowIndex][colIndex] = attacker;
             newBoard[selectedSquare.row][selectedSquare.col] = null;
             actionLog = `${attacker.color} ${attacker.type} on ${fromSquare} destroyed ${target.color} ${target.type} on ${toSquare}!`;
           } else {
             actionLog = `${attacker.color} ${attacker.type} on ${fromSquare} attacked ${target.color} ${target.type} on ${toSquare} (${target.hp}/${target.maxHp} HP left)!`;
           }
+          updatePlayerStats(damageDealt, isKilled ? target : null);
         }
       } else {
         newBoard[rowIndex][colIndex] = attacker;
