@@ -116,8 +116,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
-- [ ] **All functionality implemented or mocked out** - I did not complete this part of the deliverable.
+- [x] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits) -- The simon react is deployed, my github is included, and i have a bunch of git commits.
+- [x] **All functionality implemented or mocked out** - I did not complete this part of the deliverable. -- I implemented a somewhat working version of the chess game, there is a mocked out chat, the daily puzzle loads in the API data 
 - [ ] **Hooks** - I did not complete this part of the deliverable.
 
 ## 🚀 Service deliverable
