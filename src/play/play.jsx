@@ -17,11 +17,11 @@ const pieceMap = {
   q: { type: 'queen', symbol: '♛', color: 'black' },
   k: { type: 'king', symbol: '♚', color: 'black' },
   P: { type: 'pawn', symbol: '♙', color: 'white' },
-  R: { type: 'rook', symbol: '♜', color: 'white' },
-  N: { type: 'knight', symbol: '♞', color: 'white' },
-  B: { type: 'bishop', symbol: '♝', color: 'white' },
-  Q: { type: 'queen', symbol: '♛', color: 'white' },
-  K: { type: 'king', symbol: '♚', color: 'white' },
+  R: { type: 'rook', symbol: '♖', color: 'white' },
+  N: { type: 'knight', symbol: '♘', color: 'white' },
+  B: { type: 'bishop', symbol: '♗', color: 'white' },
+  Q: { type: 'queen', symbol: '♕', color: 'white' },
+  K: { type: 'king', symbol: '♔', color: 'white' },
 };
 
 // this function is for the lichess API that turns the string they give into the array to update the board
@@ -74,14 +74,14 @@ const initialBoard = [
   Array(8).fill(null),
   Array(8).fill(null).map(() => ({ symbol: '♙', type: 'pawn', color: 'white', ...baseStats.pawn })),
   [
-    { symbol: '♜', type: 'rook', color: 'white', ...baseStats.rook },
-    { symbol: '♞', type: 'knight', color: 'white', ...baseStats.knight },
-    { symbol: '♝', type: 'bishop', color: 'white', ...baseStats.bishop },
-    { symbol: '♚', type: 'king', color: 'white', ...baseStats.king },
-    { symbol: '♛', type: 'queen', color: 'white', ...baseStats.queen },
-    { symbol: '♝', type: 'bishop', color: 'white', ...baseStats.bishop },
-    { symbol: '♞', type: 'knight', color: 'white', ...baseStats.knight },
-    { symbol: '♜', type: 'rook', color: 'white', ...baseStats.rook }
+    { symbol: '♖', type: 'rook', color: 'white', ...baseStats.rook },
+    { symbol: '♘', type: 'knight', color: 'white', ...baseStats.knight },
+    { symbol: '♗', type: 'bishop', color: 'white', ...baseStats.bishop },
+    { symbol: '♔', type: 'king', color: 'white', ...baseStats.king },
+    { symbol: '♕', type: 'queen', color: 'white', ...baseStats.queen },
+    { symbol: '♗', type: 'bishop', color: 'white', ...baseStats.bishop },
+    { symbol: '♘', type: 'knight', color: 'white', ...baseStats.knight },
+    { symbol: '♖', type: 'rook', color: 'white', ...baseStats.rook }
   ]
 ];
 
@@ -206,6 +206,11 @@ export function Play() {
       return;
     }
 
+    if (clickedPiece && clickedPiece.color === turn) {
+      setSelectedSquare({ row: rowIndex, col: colIndex });
+      return;
+    }
+
     const newBoard = board.map(r => r.map(c => (c ? { ...c } : null)));
     const attacker = newBoard[selectedSquare.row][selectedSquare.col];
     const target = newBoard[rowIndex][colIndex];
@@ -230,7 +235,7 @@ export function Play() {
       for (let r = Math.max(0, rowIndex - 1); r <= Math.min(7, rowIndex + 1); r++) {
         for (let c = Math.max(0, colIndex - 1); c <= Math.min(7, colIndex + 1); c++) {
           const victim = newBoard[r][c];
-          if (victim) {
+          if (victim && !(r === selectedSquare.row && c === selectedSquare.col)) {
             const dmg = (r === rowIndex && c === colIndex) ? attacker.attack : splashDmg;
             const damageDealt = Math.min(victim.hp, dmg);
             victim.hp -= dmg;
