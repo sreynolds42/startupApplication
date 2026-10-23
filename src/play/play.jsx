@@ -98,7 +98,7 @@ export function Play() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Game state
+  // game state stuff
   const [board, setBoard] = useState(initialBoard);
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [turn, setTurn] = useState('white');
