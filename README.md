@@ -118,7 +118,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 - [x] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits) -- The simon react is deployed, my github is included, and i have a bunch of git commits.
 - [x] **All functionality implemented or mocked out** - I did not complete this part of the deliverable. -- I implemented a somewhat working version of the chess game, there is a mocked out chat, the daily puzzle loads in the API data 
-- [ ] **Hooks** - I did not complete this part of the deliverable.
+- [x] **Hooks** - i implemented usestate and useeffect to handle things like game state, user input, websocket messages (like move history and dummy chat) as well as syncing and loading player data
 
 ## 🚀 Service deliverable
 
