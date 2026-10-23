@@ -1,6 +1,6 @@
 // gameLogic.js
 
-// Initial board layout using custom piece objects instead of simple strings
+// board layout using custom objs
 export function createInitialBoard() {
   const board = Array(8).fill(null).map(() => Array(8).fill(null));
 
@@ -20,7 +20,7 @@ export function createInitialBoard() {
     black: { pawn: '♟', knight: '♞', bishop: '♝', rook: '♜', queen: '♛', king: '♚' },
   };
 
-  // Helper to place piece
+  // piece placer
   const setupPiece = (row, col, type, color) => {
     board[row][col] = {
       type,
@@ -32,23 +32,21 @@ export function createInitialBoard() {
     };
   };
 
-  // Setup Black (rows 0, 1)
+  // black setup
   backRank.forEach((type, col) => setupPiece(0, col, type, 'black'));
   for (let col = 0; col < 8; col++) setupPiece(1, col, 'black', 'pawn');
 
-  // Setup White (rows 6, 7)
+  // white setup
   for (let col = 0; col < 8; col++) setupPiece(6, col, 'white', 'pawn');
   backRank.forEach((type, col) => setupPiece(7, col, type, 'white'));
 
   return board;
 }
 
-/**
- * Custom combat resolution:
- * Reduces HP instead of flat capture, handling piece removal when HP <= 0.
- */
+
+// attack implementation, if an attack goes thru not necessarily a capture
 export function executeMove(board, start, end, activeAbility = null) {
-  // Deep copy board to maintain React immutability
+  // deep copies the board here
   const newBoard = board.map(row => row.map(cell => (cell ? { ...cell } : null)));
   
   const attacker = newBoard[start.row][start.col];
@@ -56,17 +54,16 @@ export function executeMove(board, start, end, activeAbility = null) {
 
   if (!attacker) return newBoard;
 
-  // 1. ECHO ABILITY: Moves piece, does damage, but returns piece to start position
+  // echoes, never moves places. will need to implement moving thru pieces when actual piece logic exists
   if (activeAbility === 'echo') {
     if (target) {
       target.hp -= attacker.attack;
       if (target.hp <= 0) newBoard[end.row][end.col] = null;
     }
-    // Attacker stays at start position
     return newBoard;
   }
 
-  // 2. IGNITE ABILITY: Deals 3x3 AoE damage around destination square
+  // ignite, 3x3 aoe
   if (activeAbility === 'ignite') {
     const splashDamage = Math.floor(attacker.attack / 2);
 
@@ -81,7 +78,7 @@ export function executeMove(board, start, end, activeAbility = null) {
         }
       }
     }
-    // Move attacker to destination if space cleared or was friendly
+    // move to space if cleared
     if (!newBoard[end.row][end.col]) {
       newBoard[end.row][end.col] = attacker;
       newBoard[start.row][start.col] = null;
@@ -89,18 +86,17 @@ export function executeMove(board, start, end, activeAbility = null) {
     return newBoard;
   }
 
-  // 3. STANDARD RPG COMBAT: Attack target or move to empty space
+  // attack stuff
   if (target) {
     if (target.color !== attacker.color) {
       target.hp -= attacker.attack;
-      // Capture/occupy only when target dies
       if (target.hp <= 0) {
         newBoard[end.row][end.col] = attacker;
         newBoard[start.row][start.col] = null;
       }
     }
   } else {
-    // Normal move to empty square
+    // regular move
     newBoard[end.row][end.col] = attacker;
     newBoard[start.row][start.col] = null;
   }
