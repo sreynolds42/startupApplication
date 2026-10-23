@@ -1,4 +1,96 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+const baseStats = {
+  pawn:   { hp: 5, maxHp: 5, attack: 3 },
+  knight: { hp: 15, maxHp: 15, attack: 15 },
+  bishop: { hp: 10, maxHp: 10, attack: 15 },
+  rook:   { hp: 20, maxHp: 20, attack: 5 },
+  queen:  { hp: 15, maxHp: 15, attack: 20 },
+  king:   { hp: 50, maxHp: 50, attack: 20 },
+};
+
+const pieceMap = {
+  p: { type: 'pawn', symbol: '♟', color: 'black' },
+  r: { type: 'rook', symbol: '♜', color: 'black' },
+  n: { type: 'knight', symbol: '♞', color: 'black' },
+  b: { type: 'bishop', symbol: '♝', color: 'black' },
+  q: { type: 'queen', symbol: '♛', color: 'black' },
+  k: { type: 'king', symbol: '♚', color: 'black' },
+  P: { type: 'pawn', symbol: '♙', color: 'white' },
+  R: { type: 'rook', symbol: '♜', color: 'white' },
+  N: { type: 'knight', symbol: '♞', color: 'white' },
+  B: { type: 'bishop', symbol: '♝', color: 'white' },
+  Q: { type: 'queen', symbol: '♛', color: 'white' },
+  K: { type: 'king', symbol: '♚', color: 'white' },
+};
+
+// this function is for the lichess API that turns the string they give into the array to update the board
+// it doesn't actually update the board position yet, so i'll implement that later
+const parseFenToBoard = (fen) => {
+  const newBoard = Array(8).fill(null).map(() => Array(8).fill(null));
+  const [position, activeColor] = fen.split(' ');
+  const rows = position.split('/');
+
+  rows.forEach((rowStr, rowIndex) => {
+    let colIndex = 0;
+    for (const char of rowStr) {
+      if (!isNaN(char)) {
+        colIndex += parseInt(char, 10);
+      } else if (pieceMap[char]) {
+        const info = pieceMap[char];
+        const stats = baseStats[info.type];
+        newBoard[rowIndex][colIndex] = {
+          symbol: info.symbol,
+          type: info.type,
+          color: info.color,
+          hp: stats.hp,
+          maxHp: stats.maxHp,
+          attack: stats.attack,
+        };
+        colIndex++;
+      }
+    }
+  });
+
+  return { board: newBoard, turn: activeColor === 'w' ? 'white' : 'black' };
+};
+
+const initialBoard = [
+  // row 1 (Black pieces)
+  [
+    { symbol: '♜', type: 'rook', color: 'black', ...baseStats.rook },
+    { symbol: '♞', type: 'knight', color: 'black', ...baseStats.knight },
+    { symbol: '♝', type: 'bishop', color: 'black', ...baseStats.bishop },
+    { symbol: '♚', type: 'king', color: 'black', ...baseStats.king },
+    { symbol: '♛', type: 'queen', color: 'black', ...baseStats.queen },
+    { symbol: '♝', type: 'bishop', color: 'black', ...baseStats.bishop },
+    { symbol: '♞', type: 'knight', color: 'black', ...baseStats.knight },
+    { symbol: '♜', type: 'rook', color: 'black', ...baseStats.rook }
+  ],
+  Array(8).fill(null).map(() => ({ symbol: '♟', type: 'pawn', color: 'black', ...baseStats.pawn })),
+  Array(8).fill(null),
+  Array(8).fill(null),
+  Array(8).fill(null),
+  Array(8).fill(null),
+  Array(8).fill(null).map(() => ({ symbol: '♙', type: 'pawn', color: 'white', ...baseStats.pawn })),
+  [
+    { symbol: '♜', type: 'rook', color: 'white', ...baseStats.rook },
+    { symbol: '♞', type: 'knight', color: 'white', ...baseStats.knight },
+    { symbol: '♝', type: 'bishop', color: 'white', ...baseStats.bishop },
+    { symbol: '♚', type: 'king', color: 'white', ...baseStats.king },
+    { symbol: '♛', type: 'queen', color: 'white', ...baseStats.queen },
+    { symbol: '♝', type: 'bishop', color: 'white', ...baseStats.bishop },
+    { symbol: '♞', type: 'knight', color: 'white', ...baseStats.knight },
+    { symbol: '♜', type: 'rook', color: 'white', ...baseStats.rook }
+  ]
+];
+
+// translate array positions to chess notation
+const getSquareNotation = (row, col) => {
+  const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+  const ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
+  return `${files[col]}${ranks[row]}`;
+};
 
 export function Play() {
   // state manager for the daily puzzle API
@@ -6,121 +98,252 @@ export function Play() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // fetching the puzzle from the api via lichess
+  // Game state
+  const [board, setBoard] = useState(initialBoard);
+  const [selectedSquare, setSelectedSquare] = useState(null);
+  const [turn, setTurn] = useState('white');
+  const [activeAbility, setActiveAbility] = useState(null);
+
+  // Mock WebSocket Chat state
+  const [chatMessages, setChatMessages] = useState([
+    { from: 'System', text: 'Connected to match lobby.' }
+  ]);
+
+  // reads the current user and gets their username, if not it's guest
+  const username = localStorage.getItem('userName') || 'Guest';
+
+  // websocket for chat and turn stuff, dummy data for now.
+  useEffect(() => {
+    const mockUsers = ['xXDarkMaster69420Xx', 'ChessSl@y3r99', 'Omega master'];
+    const mockQuotes = [
+      'You stand no chance!',
+      'I will destroy you',
+      '...!',
+      'My IQ is 150.'
+    ];
+
+    const interval = setInterval(() => {
+      const randomUser = mockUsers[Math.floor(Math.random() * mockUsers.length)];
+      const randomMsg = mockQuotes[Math.floor(Math.random() * mockQuotes.length)];
+      
+      setChatMessages(prev => [
+        ...prev.slice(-4), // keep last 5 messages
+        { from: randomUser, text: randomMsg }
+      ]);
+    }, 7000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // fetching the puzzle from the api via lichess and updating the board
   const fetchDailyPuzzle = async () => {
     setLoading(true);
     setError(null);
-    try{
-      // try getting the api
+    try {
       const response = await fetch('https://lichess.org/api/puzzle/daily');
-      // if it fails
-      if (!response.ok){
+      if (!response.ok) {
         throw new Error('Failed to get daily puzzle');
       }
-      // using await to not clog up time waiting
       const data = await response.json();
       setPuzzleData(data);
-    } catch (err){
+
+      if (data?.game?.fen) {
+        const { board: puzzleBoard, turn: puzzleTurn } = parseFenToBoard(data.game.fen);
+        setBoard(puzzleBoard);
+        setTurn(puzzleTurn);
+        setSelectedSquare(null);
+        setActiveAbility(null);
+        
+        setChatMessages(prev => [
+          ...prev.slice(-4),
+          { from: 'System', text: `Loaded Daily Puzzle #${data.puzzle.id} (Rating: ${data.puzzle.rating})!` }
+        ]);
+      }
+    } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
+  const handleSquareClick = (rowIndex, colIndex) => {
+    const clickedPiece = board[rowIndex][colIndex];
+
+    if (!selectedSquare) {
+      if (clickedPiece && clickedPiece.color === turn) {
+        setSelectedSquare({ row: rowIndex, col: colIndex });
+      }
+      return;
+    }
+
+    if (selectedSquare.row === rowIndex && selectedSquare.col === colIndex) {
+      setSelectedSquare(null);
+      return;
+    }
+
+    const newBoard = board.map(r => r.map(c => (c ? { ...c } : null)));
+    const attacker = newBoard[selectedSquare.row][selectedSquare.col];
+    const target = newBoard[rowIndex][colIndex];
+
+    const fromSquare = getSquareNotation(selectedSquare.row, selectedSquare.col);
+    const toSquare = getSquareNotation(rowIndex, colIndex);
+    let actionLog = '';
+
+    if (activeAbility === 'echo') {
+      if (target) {
+        target.hp -= attacker.attack;
+        if (target.hp <= 0) newBoard[rowIndex][colIndex] = null;
+        actionLog = `${attacker.color} ${attacker.type} echoed from ${fromSquare} targeting ${toSquare} for ${attacker.attack} DMG!`;
+      } else {
+        actionLog = `${attacker.color} ${attacker.type} echoed towards ${toSquare} but hit nothing!`;
+      }
+    } else if (activeAbility === 'ignite') {
+      const splashDmg = Math.floor(attacker.attack / 2);
+      for (let r = Math.max(0, rowIndex - 1); r <= Math.min(7, rowIndex + 1); r++) {
+        for (let c = Math.max(0, colIndex - 1); c <= Math.min(7, colIndex + 1); c++) {
+          const victim = newBoard[r][c];
+          if (victim) {
+            const dmg = (r === rowIndex && c === colIndex) ? attacker.attack : splashDmg;
+            victim.hp -= dmg;
+            if (victim.hp <= 0) newBoard[r][c] = null;
+          }
+        }
+      }
+      if (!newBoard[rowIndex][colIndex]) {
+        newBoard[rowIndex][colIndex] = attacker;
+        newBoard[selectedSquare.row][selectedSquare.col] = null;
+      }
+      actionLog = `${attacker.color} ${attacker.type} ignited ${toSquare} dealing AoE damage!`;
+    } else {
+      if (target) {
+        if (target.color !== attacker.color) {
+          target.hp -= attacker.attack;
+          if (target.hp <= 0) {
+            newBoard[rowIndex][colIndex] = attacker;
+            newBoard[selectedSquare.row][selectedSquare.col] = null;
+            actionLog = `${attacker.color} ${attacker.type} on ${fromSquare} destroyed ${target.color} ${target.type} on ${toSquare}!`;
+          } else {
+            actionLog = `${attacker.color} ${attacker.type} on ${fromSquare} attacked ${target.color} ${target.type} on ${toSquare} (${target.hp}/${target.maxHp} HP left)!`;
+          }
+        }
+      } else {
+        newBoard[rowIndex][colIndex] = attacker;
+        newBoard[selectedSquare.row][selectedSquare.col] = null;
+        actionLog = `${attacker.color} ${attacker.type} moved from ${fromSquare} to ${toSquare}.`;
+      }
+    }
+
+    if (actionLog) {
+      setChatMessages(prev => [
+        ...prev.slice(-4),
+        { from: 'System', text: actionLog }
+      ]);
+    }
+
+    setBoard(newBoard);
+    setSelectedSquare(null);
+    setActiveAbility(null);
+    setTurn(prev => (prev === 'white' ? 'black' : 'white'));
+  };
+
   return (
     <main className="main-content play-layout">
-      {/* still have to implement button affecting game, will do that once game is implemented*/}
-      <button className="btn btn-sm btn-outline-warning text-white position-absolute end-0 top-50 translate-middle-y me-2">Daily Puzzle</button>
-      <div className="game-status">Turn: <span className="highlight">Guest</span></div>
+      <button 
+        className="btn btn-sm btn-outline-warning text-white position-absolute end-0 top-50 translate-middle-y me-2"
+        onClick={fetchDailyPuzzle}
+        disabled={loading}
+      >
+        {loading ? 'Loading...' : 'Daily Puzzle'}
+      </button>
 
-      {/* Board Placeholder */}
+      <div className="game-status">
+        Player: <span className="highlight me-3">{username}</span>
+        Turn: <span className="highlight">{turn.toUpperCase()}</span>
+      </div>
+
+      {error && <div className="alert alert-danger py-1 px-2 my-2 small">{error}</div>}
+      {puzzleData && (
+        <section className="card bg-dark border-warning my-2 text-start small">
+          <h4 className="h6 text-warning mb-1">Puzzle Rating: {puzzleData.puzzle.rating}</h4>
+          <p className="mb-0">Solution: {puzzleData.puzzle.solution.join(' → ')}</p>
+        </section>
+      )}
+
+      {/* Board */}
       <section className="board-container">
         <div className="chess-board">
-          {/* row 1 */}
-          <div className="square dark">♜</div>
-          <div className="square light">♞</div>
-          <div className="square dark">♝</div>
-          <div className="square light">♚</div>
-          <div className="square dark">♛</div>
-          <div className="square light">♝</div>
-          <div className="square dark">♞</div>
-          <div className="square light">♜</div>
-          {/* row 2 */}
-          <div className="square light">♟</div>
-          <div className="square dark">♟</div>
-          <div className="square light">♟</div>
-          <div className="square dark">♟</div>
-          <div className="square light">♟</div>
-          <div className="square dark">♟</div>
-          <div className="square light">♟</div>
-          <div className="square dark">♟</div>
-          {/* row 3 */}
-          <div className="square dark"></div>
-          <div className="square light"></div>
-          <div className="square dark"></div>
-          <div className="square light"></div>
-          <div className="square dark"></div>
-          <div className="square light"></div>
-          <div className="square dark"></div>
-          <div className="square light"></div>
-          {/* row 4 */}
-          <div className="square light"></div>
-          <div className="square dark"></div>
-          <div className="square light"></div>
-          <div className="square dark"></div>
-          <div className="square light"></div>
-          <div className="square dark"></div>
-          <div className="square light"></div>
-          <div className="square dark"></div>
-          {/* row 5 */}
-          <div className="square dark"></div>
-          <div className="square light"></div>
-          <div className="square dark"></div>
-          <div className="square light"></div>
-          <div className="square dark"></div>
-          <div className="square light"></div>
-          <div className="square dark"></div>
-          <div className="square light"></div>
-          {/* row 6 */}
-          <div className="square light"></div>
-          <div className="square dark"></div>
-          <div className="square light"></div>
-          <div className="square dark"></div>
-          <div className="square light"></div>
-          <div className="square dark"></div>
-          <div className="square light"></div>
-          <div className="square dark"></div>
-          {/* row 7 */}
-          <div className="square dark">♙</div>
-          <div className="square light">♙</div>
-          <div className="square dark">♙</div>
-          <div className="square light">♙</div>
-          <div className="square dark">♙</div>
-          <div className="square light">♙</div>
-          <div className="square dark">♙</div>
-          <div className="square light">♙</div>
-          {/* row 8 */}
-          <div className="square light">♜</div>
-          <div className="square dark">♞</div>
-          <div className="square light">♝</div>
-          <div className="square dark">♚</div>
-          <div className="square light">♛</div>
-          <div className="square dark">♝</div>
-          <div className="square light">♞</div>
-          <div className="square dark">♜</div>
+          {board.map((rowArr, rowIndex) =>
+            rowArr.map((cell, colIndex) => {
+              const isDark = (rowIndex + colIndex) % 2 === 1;
+              const isSelected = selectedSquare?.row === rowIndex && selectedSquare?.col === colIndex;
+
+              return (
+                <div
+                  key={`${rowIndex}-${colIndex}`}
+                  className={`square ${isDark ? 'dark' : 'light'} ${isSelected ? 'border border-warning border-3' : ''}`}
+                  onClick={() => handleSquareClick(rowIndex, colIndex)}
+                  style={{ position: 'relative', cursor: 'pointer' }}
+                >
+                  {cell && (
+                    <>
+                      <span>{cell.symbol}</span>
+                      {/* Health Bar Overlay */}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          bottom: '3px',
+                          left: '4px',
+                          right: '4px',
+                          height: '4px',
+                          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                          borderRadius: '2px',
+                          overflow: 'hidden'
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: `${Math.max(0, (cell.hp / cell.maxHp) * 100)}%`,
+                            height: '100%',
+                            backgroundColor: cell.color === 'white' ? '#4caf50' : '#f44336',
+                            transition: 'width 0.2s ease-in-out'
+                          }}
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
+              );
+            })
+          )}
         </div>
       </section>
 
       {/* Ability Buttons */}
       <div className="btn-group my-3 w-100" role="group" style={{ maxWidth: '380px' }}>
-        <button type="button" className="btn btn-lg text-white fw-bold btn-echo">Echo</button>
-        <button type="button" className="btn btn-lg text-white fw-bold btn-ignite">Ignite</button>
+        <button 
+          type="button" 
+          className={`btn btn-lg text-white fw-bold btn-echo ${activeAbility === 'echo' ? 'btn-warning text-dark' : ''}`}
+          onClick={() => setActiveAbility(prev => (prev === 'echo' ? null : 'echo'))}
+        >
+          Echo
+        </button>
+        <button 
+          type="button" 
+          className={`btn btn-lg text-white fw-bold btn-ignite ${activeAbility === 'ignite' ? 'btn-danger' : ''}`}
+          onClick={() => setActiveAbility(prev => (prev === 'ignite' ? null : 'ignite'))}
+        >
+          Ignite
+        </button>
       </div>
 
-      {/* Feed + Player to player chat */}
+      {/* Dynamic WebSocket Chat Feed */}
       <section className="card websocket-card">
-        <div className="feed-box">
-          <p className="ws-msg mb-0">Websocket Chat</p>
+        <div className="feed-box text-start small">
+          {chatMessages.map((msg, index) => (
+            <p key={index} className="ws-msg mb-1">
+              <strong>{msg.from}:</strong> {msg.text}
+            </p>
+          ))}
         </div>
       </section>
     </main>
