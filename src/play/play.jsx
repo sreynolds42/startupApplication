@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { executeMove } from './gameLogic'; // or './gameLogic' depending on your folder path
 
 const baseStats = {
   pawn:   { hp: 5, maxHp: 5, attack: 3 },

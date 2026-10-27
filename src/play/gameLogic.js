@@ -1,6 +1,6 @@
-// gameLogic.js
+// src/gameLogic.js
+import { isValidPieceMove } from './movementRules.js';
 
-// board layout using custom objs
 export function createInitialBoard() {
   const board = Array(8).fill(null).map(() => Array(8).fill(null));
 
@@ -20,7 +20,6 @@ export function createInitialBoard() {
     black: { pawn: '♟', knight: '♞', bishop: '♝', rook: '♜', queen: '♛', king: '♚' },
   };
 
-  // piece placer
   const setupPiece = (row, col, type, color) => {
     board[row][col] = {
       type,
@@ -32,44 +31,48 @@ export function createInitialBoard() {
     };
   };
 
-  // black setup
   backRank.forEach((type, col) => setupPiece(0, col, type, 'black'));
   for (let col = 0; col < 8; col++) setupPiece(1, col, 'black', 'pawn');
 
-  // white setup
   for (let col = 0; col < 8; col++) setupPiece(6, col, 'white', 'pawn');
   backRank.forEach((type, col) => setupPiece(7, col, type, 'white'));
 
   return board;
 }
 
-
-// attack implementation, if an attack goes thru not necessarily a capture
 export function executeMove(board, start, end, activeAbility = null) {
-  // deep copies the board here
   const newBoard = board.map(row => row.map(cell => (cell ? { ...cell } : null)));
   
   const attacker = newBoard[start.row][start.col];
   const target = newBoard[end.row][end.col];
 
-  if (!attacker) return newBoard;
+  if (!attacker) return board;
 
-  // echoes, never moves places. will need to implement moving thru pieces when actual piece logic exists
+  // 1. Prevent capturing your own teammates (unless using Ignite friendly fire)
+  if (target && target.color === attacker.color && activeAbility !== 'ignite') {
+    return board; 
+  }
+
+  // 2. Validate standard movement (Echo lets you bypass piece validation, but normal & Ignite moves must obey chess physics)
+  if (!activeAbility && !isValidPieceMove(newBoard, start, end, attacker)) {
+    return board; // Returns original board unmodified if the move is illegal!
+  }
+
+  // --- ECHO ABILITY ---
   if (activeAbility === 'echo') {
-    if (target) {
+    if (target && target.color !== attacker.color) {
       target.hp -= attacker.attack;
       if (target.hp <= 0) newBoard[end.row][end.col] = null;
     }
-    return newBoard;
+    return newBoard; // Attacker stays in place
   }
 
-  // ignite, 3x3 aoe
+  // --- IGNITE ABILITY ---
   if (activeAbility === 'ignite') {
     const splashDamage = Math.floor(attacker.attack / 2);
 
     for (let r = Math.max(0, end.row - 1); r <= Math.min(7, end.row + 1); r++) {
       for (let c = Math.max(0, end.col - 1); c <= Math.min(7, end.col + 1); c++) {
-        if (r === start.row && c === start.col) continue;
         const victim = newBoard[r][c];
         if (victim) {
           const dmg = (r === end.row && c === end.col) ? attacker.attack : splashDamage;
@@ -78,7 +81,7 @@ export function executeMove(board, start, end, activeAbility = null) {
         }
       }
     }
-    // move to space if cleared
+
     if (!newBoard[end.row][end.col]) {
       newBoard[end.row][end.col] = attacker;
       newBoard[start.row][start.col] = null;
@@ -86,17 +89,14 @@ export function executeMove(board, start, end, activeAbility = null) {
     return newBoard;
   }
 
-  // attack stuff
+  // --- STANDARD MOVE / ATTACK ---
   if (target) {
-    if (target.color !== attacker.color) {
-      target.hp -= attacker.attack;
-      if (target.hp <= 0) {
-        newBoard[end.row][end.col] = attacker;
-        newBoard[start.row][start.col] = null;
-      }
+    target.hp -= attacker.attack;
+    if (target.hp <= 0) {
+      newBoard[end.row][end.col] = attacker;
+      newBoard[start.row][start.col] = null;
     }
   } else {
-    // regular move
     newBoard[end.row][end.col] = attacker;
     newBoard[start.row][start.col] = null;
   }
