@@ -212,73 +212,40 @@ export function Play() {
       return;
     }
 
-    const newBoard = board.map(r => r.map(c => (c ? { ...c } : null)));
-    const attacker = newBoard[selectedSquare.row][selectedSquare.col];
-    const target = newBoard[rowIndex][colIndex];
+    const start = selectedSquare;
+    const end = { row: rowIndex, col: colIndex };
 
-    const fromSquare = getSquareNotation(selectedSquare.row, selectedSquare.col);
-    const toSquare = getSquareNotation(rowIndex, colIndex);
+    // CALL THE CENTRALIZED LOGIC (which enforces movement rules!)
+    const newBoard = executeMove(board, start, end, activeAbility);
+
+    // If executeMove returned the exact same board, the move was illegal!
+    if (newBoard === board) {
+      setChatMessages(prev => [
+        ...prev.slice(-4),
+        { from: 'System', text: 'Illegal move!' }
+      ]);
+      setSelectedSquare(null);
+      return;
+    }
+
+    // Build action log text for the chat feed
+    const attacker = board[start.row][start.col];
+    const fromSquare = getSquareNotation(start.row, start.col);
+    const toSquare = getSquareNotation(end.row, end.col);
     let actionLog = '';
 
     if (activeAbility === 'echo') {
-      if (target) {
-        const damageDealt = Math.min(target.hp, attacker.attack);
-        target.hp -= attacker.attack;
-        const isKilled = target.hp <= 0;
-        if (isKilled) newBoard[rowIndex][colIndex] = null;
-        updatePlayerStats(damageDealt, isKilled ? target : null);
-        actionLog = `${attacker.color} ${attacker.type} echoed from ${fromSquare} targeting ${toSquare} for ${attacker.attack} DMG!`;
-      } else {
-        actionLog = `${attacker.color} ${attacker.type} echoed towards ${toSquare} but hit nothing!`;
-      }
+      actionLog = `${attacker.color} ${attacker.type} echoed from ${fromSquare} targeting ${toSquare}!`;
     } else if (activeAbility === 'ignite') {
-      const splashDmg = Math.floor(attacker.attack / 2);
-      for (let r = Math.max(0, rowIndex - 1); r <= Math.min(7, rowIndex + 1); r++) {
-        for (let c = Math.max(0, colIndex - 1); c <= Math.min(7, colIndex + 1); c++) {
-          const victim = newBoard[r][c];
-          if (victim && !(r === selectedSquare.row && c === selectedSquare.col)) {
-            const dmg = (r === rowIndex && c === colIndex) ? attacker.attack : splashDmg;
-            const damageDealt = Math.min(victim.hp, dmg);
-            victim.hp -= dmg;
-            const isKilled = victim.hp <= 0;
-            if (isKilled) newBoard[r][c] = null;
-            updatePlayerStats(damageDealt, isKilled ? victim : null);
-          }
-        }
-      }
-      if (!newBoard[rowIndex][colIndex]) {
-        newBoard[rowIndex][colIndex] = attacker;
-        newBoard[selectedSquare.row][selectedSquare.col] = null;
-      }
-      actionLog = `${attacker.color} ${attacker.type} ignited ${toSquare} dealing AoE damage!`;
+      actionLog = `${attacker.color} ${attacker.type} ignited ${toSquare} with AoE damage!`;
     } else {
-      if (target) {
-        if (target.color !== attacker.color) {
-          const damageDealt = Math.min(target.hp, attacker.attack);
-          target.hp -= attacker.attack;
-          const isKilled = target.hp <= 0;
-          if (isKilled) {
-            newBoard[rowIndex][colIndex] = attacker;
-            newBoard[selectedSquare.row][selectedSquare.col] = null;
-            actionLog = `${attacker.color} ${attacker.type} on ${fromSquare} destroyed ${target.color} ${target.type} on ${toSquare}!`;
-          } else {
-            actionLog = `${attacker.color} ${attacker.type} on ${fromSquare} attacked ${target.color} ${target.type} on ${toSquare} (${target.hp}/${target.maxHp} HP left)!`;
-          }
-          updatePlayerStats(damageDealt, isKilled ? target : null);
-        }
-      } else {
-        newBoard[rowIndex][colIndex] = attacker;
-        newBoard[selectedSquare.row][selectedSquare.col] = null;
-        actionLog = `${attacker.color} ${attacker.type} moved from ${fromSquare} to ${toSquare}.`;
-      }
+      actionLog = `${attacker.color} ${attacker.type} moved/attacked from ${fromSquare} to ${toSquare}.`;
     }
 
-    if (actionLog) {
-      setChatMessages(prev => [
-        ...prev.slice(-4),
-        { from: 'System', text: actionLog }
-      ]);
-    }
+    setChatMessages(prev => [
+      ...prev.slice(-4),
+      { from: 'System', text: actionLog }
+    ]);
 
     setBoard(newBoard);
     setSelectedSquare(null);
