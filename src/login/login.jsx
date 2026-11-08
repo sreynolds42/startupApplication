@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export function Login() {
-  const [usernameInput, setUsernameInput] = useState(
+  const [usernameInput, setUsernameInput] = useState('');
+  const [password, setPassword] = useState('');
+  const [loggedInUser, setLoggedInUser] = useState(
     localStorage.getItem('userName') || ''
   );
-  const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -13,17 +14,22 @@ export function Login() {
   const createUser = () => authenticate('/api/auth/create');
 
   const authenticate = async (endpoint) => {
-    const response = await fetch(endpoint, {
-      method: 'post',
-      body: JSON.stringify({ email: usernameInput, password }),
-      headers: { 'Content-type': 'application/json' },
-    });
-    if (response.status === 200) {
-      localStorage.setItem('userName', usernameInput);
-      navigate('/play');
-    } else {
-      const body = await response.json();
-      setError(body.msg);
+    try {
+      const response = await fetch(endpoint, {
+        method: 'post',
+        body: JSON.stringify({ email: usernameInput, password }),
+        headers: { 'Content-type': 'application/json' },
+      });
+      if (response.status === 200) {
+        localStorage.setItem('userName', usernameInput);
+        setLoggedInUser(usernameInput);
+        navigate('/play');
+      } else {
+        const body = await response.json();
+        setError(body.msg);
+      }
+    } catch (err) {
+      setError('Connection failed. Is your backend running on port 4000?');
     }
   };
 
@@ -45,13 +51,13 @@ export function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <div className="d-flex gap-1 w-100">
-            <button onClick={loginUser} className="btn btn-warning btn-sm fw-bold flex-grow-1">Login</button>
-            <button onClick={createUser} className="btn btn-secondary btn-sm fw-bold flex-grow-1">Create</button>
+            <button type="button" onClick={loginUser} className="btn btn-warning btn-sm fw-bold flex-grow-1">Login</button>
+            <button type="button" onClick={createUser} className="btn btn-secondary btn-sm fw-bold flex-grow-1">Create</button>
           </div>
         </div>
         {error && <div className="text-danger small mt-1">{error}</div>}
         <p className="user-badge mt-1">
-          Status: <span className="badge text-bg-warning">{usernameInput || 'Guest'}</span>
+          Status: <span className="badge text-bg-warning">{loggedInUser || 'Guest'}</span>
         </p>
       </div>
       <div className="card hero-card">
