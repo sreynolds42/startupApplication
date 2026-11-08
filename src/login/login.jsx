@@ -29,32 +29,51 @@ export function Login() {
         setError(body.msg);
       }
     } catch (err) {
-      setError('Connection failed. Is your backend running on port 4000?');
+      setError('Connection failed.');
     }
+  };
+
+  const logoutUser = async () => {
+    await fetch('/api/auth/logout', { method: 'delete' }).catch(() => {});
+    localStorage.removeItem('userName');
+    setLoggedInUser('');
+    setPassword('');
+    setUsernameInput('');
   };
 
   return (
     <main className="main-content">
       <div className="header-auth mb-3">
-        <div className="d-flex flex-column gap-1 justify-content-center align-items-center w-100" style={{ maxWidth: '320px' }}>
-          <input 
-            type="text" 
-            className="form-control form-control-sm bg-dark text-white border-secondary mb-1" 
-            placeholder="User / Email" 
-            value={usernameInput}
-            onChange={(e) => setUsernameInput(e.target.value)}
-          />
-          <input 
-            type="password" 
-            className="form-control form-control-sm bg-dark text-white border-secondary mb-1" 
-            placeholder="Password" 
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <div className="d-flex gap-1 w-100">
-            <button type="button" onClick={loginUser} className="btn btn-warning btn-sm fw-bold flex-grow-1">Login</button>
-            <button type="button" onClick={createUser} className="btn btn-secondary btn-sm fw-bold flex-grow-1">Create</button>
+        {loggedInUser ? (
+          <div className="d-flex flex-column gap-2 align-items-center w-100" style={{ maxWidth: '320px' }}>
+            <p className="text-white small mb-0">Welcome back, <span className="highlight">{loggedInUser}</span>!</p>
+            <div className="d-flex gap-1 w-100">
+              <button type="button" onClick={() => navigate('/play')} className="btn btn-warning btn-sm fw-bold flex-grow-1">Play</button>
+              <button type="button" onClick={logoutUser} className="btn btn-secondary btn-sm fw-bold flex-grow-1">Logout</button>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="d-flex flex-column gap-1 justify-content-center align-items-center w-100" style={{ maxWidth: '320px' }}>
+            <input 
+              type="text" 
+              className="form-control form-control-sm bg-dark text-white border-secondary mb-1" 
+              placeholder="User / Email" 
+              value={usernameInput}
+              onChange={(e) => setUsernameInput(e.target.value)}
+            />
+            <input 
+              type="password" 
+              className="form-control form-control-sm bg-dark text-white border-secondary mb-1" 
+              placeholder="Password" 
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <div className="d-flex gap-1 w-100">
+              <button type="button" onClick={loginUser} className="btn btn-warning btn-sm fw-bold flex-grow-1">Login</button>
+              <button type="button" onClick={createUser} className="btn btn-secondary btn-sm fw-bold flex-grow-1">Create</button>
+            </div>
+          </div>
+        )}
+
         {error && <div className="text-danger small mt-1">{error}</div>}
         <p className="user-badge mt-1">
           Status: <span className="badge text-bg-warning">{loggedInUser || 'Guest'}</span>
