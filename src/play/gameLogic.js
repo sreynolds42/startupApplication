@@ -73,6 +73,10 @@ export function executeMove(board, start, end, activeAbility = null) {
 
     for (let r = Math.max(0, end.row - 1); r <= Math.min(7, end.row + 1); r++) {
       for (let c = Math.max(0, end.col - 1); c <= Math.min(7, end.col + 1); c++) {
+        
+        // SKIP THE ATTACKER SO IT DOES NOT SELF-DAMAGE
+        if (r === start.row && c === start.col) continue;
+
         const victim = newBoard[r][c];
         if (victim) {
           const dmg = (r === end.row && c === end.col) ? attacker.attack : splashDamage;
@@ -82,6 +86,7 @@ export function executeMove(board, start, end, activeAbility = null) {
       }
     }
 
+    // Move attacker to destination if the target square is now empty
     if (!newBoard[end.row][end.col]) {
       newBoard[end.row][end.col] = attacker;
       newBoard[start.row][start.col] = null;
