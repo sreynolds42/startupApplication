@@ -124,14 +124,14 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
-- [ ] **Node.js/Express HTTP service** - I did not complete this part of the deliverable.
-- [ ] **Static middleware for frontend** - I did not complete this part of the deliverable.
-- [ ] **Calls to third party endpoints** - I did not complete this part of the deliverable.
-- [ ] **Backend service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Frontend calls service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Supports registration, login, logout, and restricted endpoint** - I did not complete this part of the deliverable.
-- [ ] **Uses BCrypt to hash passwords** - I did not complete this part of the deliverable.
+- [x] I completed the prerequisites for this deliverable (Simon deployed, GitHub link, Git commits)
+- [x] **Node.js/Express HTTP service** - backend has been set up
+- [x] **Static middleware for frontend** - app.use(express.static('public')) is the static middleware
+- [x] **Calls to third party endpoints** - lichess api is called via the daily puzzle button
+- [x] **Backend service endpoints** - endpoints handle auth stuff and stat retrieval  
+- [x] **Frontend calls service endpoints** - react components fetch data from endpoints via fetch()
+- [x] **Supports registration, login, logout, and restricted endpoint** - people can create accounts, login and also log out. If password is wrong, access is denied.
+- [x] **Uses BCrypt to hash passwords** - passwords are hashed
 
 ## 🚀 DB deliverable
 
