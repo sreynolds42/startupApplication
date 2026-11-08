@@ -16,10 +16,12 @@ export function Stats() {
     setUsername(savedUser);
 // if they arent a guest it pulls their stored stats
     if (savedUser !== 'Guest') {
-      const savedStats = localStorage.getItem(`stats_${savedUser}`);
-      if (savedStats) {
-        setUserStats(JSON.parse(savedStats));
-      }
+      fetch('/api/stats')
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data) setUserStats(data);
+        })
+        .catch(() => {});
     }
   }, []);
  // maths out total games played
@@ -75,7 +77,7 @@ export function Stats() {
             </tbody>
           </table>
         </div>
-        <span className="api-tag text-secondary">Mocked LocalStorage Data</span>
+        <span className="api-tag text-secondary">Backend Service Data</span>
       </section>
     </main>
   );
