@@ -178,36 +178,51 @@ export function Play() {
     return () => clearInterval(interval);
   }, []);
 
-  // fetching the puzzle from the api via lichess and updating the board
+ 
+  // Fetching the daily puzzle from Lichess
   const fetchDailyPuzzle = async () => {
     setLoading(true);
     setError(null);
+
     try {
       const response = await fetch('https://lichess.org/api/puzzle/daily');
+
       if (!response.ok) {
         throw new Error('Failed to get daily puzzle');
       }
+
       const data = await response.json();
+
       setPuzzleData(data);
 
-      if (data?.game?.fen) {
-        const { board: puzzleBoard, turn: puzzleTurn } = parseFenToBoard(data.game.fen);
+      // FEN is stored inside data.puzzle.fen, NOT data.game.fen
+      if (data?.puzzle?.fen) {
+        const { board: puzzleBoard, turn: puzzleTurn } =
+          parseFenToBoard(data.puzzle.fen);
+
         setBoard(puzzleBoard);
         setTurn(puzzleTurn);
         setSelectedSquare(null);
         setActiveAbility(null);
-        
+
         setChatMessages(prev => [
           ...prev.slice(-4),
-          { from: 'System', text: `Loaded Daily Puzzle #${data.puzzle.id} (Rating: ${data.puzzle.rating})!` }
+          {
+            from: 'System',
+            text: `Loaded Daily Puzzle #${data.puzzle.id} (Rating: ${data.puzzle.rating})!`
+          }
         ]);
+      } else {
+        throw new Error('Puzzle did not contain a valid FEN position');
       }
+
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
+
 
   const handleSquareClick = (rowIndex, colIndex) => {
     const clickedPiece = board[rowIndex][colIndex];
