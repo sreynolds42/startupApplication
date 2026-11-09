@@ -56,35 +56,48 @@ const parseFenToBoard = (fen) => {
   return { board: newBoard, turn: activeColor === 'w' ? 'white' : 'black' };
 };
 
-const initialBoard = [
-  // row 1 (Black pieces)
-  [
-    { symbol: '♜', type: 'rook', color: 'black', ...baseStats.rook },
-    { symbol: '♞', type: 'knight', color: 'black', ...baseStats.knight },
-    { symbol: '♝', type: 'bishop', color: 'black', ...baseStats.bishop },
-    { symbol: '♚', type: 'king', color: 'black', ...baseStats.king },
-    { symbol: '♛', type: 'queen', color: 'black', ...baseStats.queen },
-    { symbol: '♝', type: 'bishop', color: 'black', ...baseStats.bishop },
-    { symbol: '♞', type: 'knight', color: 'black', ...baseStats.knight },
-    { symbol: '♜', type: 'rook', color: 'black', ...baseStats.rook }
-  ],
-  Array(8).fill(null).map(() => ({ symbol: '♟', type: 'pawn', color: 'black', ...baseStats.pawn })),
-  Array(8).fill(null),
-  Array(8).fill(null),
-  Array(8).fill(null),
-  Array(8).fill(null),
-  Array(8).fill(null).map(() => ({ symbol: '♙', type: 'pawn', color: 'white', ...baseStats.pawn })),
-  [
-    { symbol: '♖', type: 'rook', color: 'white', ...baseStats.rook },
-    { symbol: '♘', type: 'knight', color: 'white', ...baseStats.knight },
-    { symbol: '♗', type: 'bishop', color: 'white', ...baseStats.bishop },
-    { symbol: '♔', type: 'king', color: 'white', ...baseStats.king },
-    { symbol: '♕', type: 'queen', color: 'white', ...baseStats.queen },
-    { symbol: '♗', type: 'bishop', color: 'white', ...baseStats.bishop },
-    { symbol: '♘', type: 'knight', color: 'white', ...baseStats.knight },
-    { symbol: '♖', type: 'rook', color: 'white', ...baseStats.rook }
-  ]
-];
+// Parses a custom text grid string into the board array
+const parseTextLevel = (textLayout) => {
+  const newBoard = Array(8).fill(null).map(() => Array(8).fill(null));
+  const lines = textLayout.trim().split('\n').map(line => line.trim()).filter(Boolean);
+
+  lines.forEach((rowStr, rowIndex) => {
+    if (rowIndex > 7) return;
+    const chars = rowStr.split(/\s+/);
+    
+    chars.forEach((char, colIndex) => {
+      if (colIndex > 7) return;
+      if (pieceMap[char]) {
+        const info = pieceMap[char];
+        const stats = baseStats[info.type];
+        newBoard[rowIndex][colIndex] = {
+          symbol: info.symbol,
+          type: info.type,
+          color: info.color,
+          hp: stats.hp,
+          maxHp: stats.maxHp,
+          attack: stats.attack,
+        };
+      }
+    });
+  });
+
+  return newBoard;
+};
+
+// Baseline starting setup matching 0-0.txt format
+const baselineLevelString = `
+r n b k q b n r
+p p p p p p p p
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+P P P P P P P P
+R N B K Q B N R
+`;
+
+const initialBoard = parseTextLevel(baselineLevelString);
 
 // translate array positions to chess notation
 const getSquareNotation = (row, col) => {
@@ -192,6 +205,33 @@ export function Play() {
     }
   };
 
+  // Handler for uploading a custom text level file
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const textContent = event.target.result;
+        const customBoard = parseTextLevel(textContent);
+        setBoard(customBoard);
+        setSelectedSquare(null);
+        setActiveAbility(null);
+        setTurn('white');
+        setPuzzleData(null);
+
+        setChatMessages(prev => [
+          ...prev.slice(-4),
+          { from: 'System', text: `Loaded custom level from ${file.name}!` }
+        ]);
+      } catch (err) {
+        setError('Failed to parse text level file.');
+      }
+    };
+    reader.readAsText(file);
+  };
+
   const handleSquareClick = (rowIndex, colIndex) => {
     const clickedPiece = board[rowIndex][colIndex];
 
@@ -255,13 +295,19 @@ export function Play() {
 
   return (
     <main className="main-content play-layout">
-      <button 
-        className="btn btn-sm btn-outline-warning text-white position-absolute end-0 top-50 translate-middle-y me-2"
-        onClick={fetchDailyPuzzle}
-        disabled={loading}
-      >
-        {loading ? 'Loading...' : 'Daily Puzzle'}
-      </button>
+      <div className="position-absolute end-0 top-50 translate-middle-y me-2 d-flex flex-column gap-2">
+        <button 
+          className="btn btn-sm btn-outline-warning text-white"
+          onClick={fetchDailyPuzzle}
+          disabled={loading}
+        >
+          {loading ? 'Loading...' : 'Daily Puzzle'}
+        </button>
+        <label className="btn btn-sm btn-outline-info text-white mb-0" style={{ cursor: 'pointer' }}>
+          Upload Level .txt
+          <input type="file" accept=".txt" onChange={handleFileUpload} style={{ display: 'none' }} />
+        </label>
+      </div>
 
       <div className="game-status">
         Player: <span className="highlight me-3">{username}</span>
