@@ -85,20 +85,6 @@ const parseTextLevel = (textLayout) => {
   return newBoard;
 };
 
-// Baseline starting setup matching 0-0.txt format
-const baselineLevelString = `
-r n b k q b n r
-p p p p p p p p
-. . . . . . . .
-. . . . . . . .
-. . . . . . . .
-. . . . . . . .
-P P P P P P P P
-R N B K Q B N R
-`;
-
-const initialBoard = parseTextLevel(baselineLevelString);
-
 // translate array positions to chess notation
 const getSquareNotation = (row, col) => {
   const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
@@ -113,7 +99,7 @@ export function Play() {
   const [error, setError] = useState(null);
 
   // game state stuff
-  const [board, setBoard] = useState(initialBoard);
+  const [board, setBoard] = useState(Array(8).fill(null).map(() => Array(8).fill(null)));
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [turn, setTurn] = useState('white');
   const [activeAbility, setActiveAbility] = useState(null);
@@ -150,6 +136,24 @@ export function Play() {
 
     localStorage.setItem(statsKey, JSON.stringify(existingStats));
   };
+
+  // Load baseline level from levels/0-0.txt on mount
+  useEffect(() => {
+    const loadBaselineLevel = async () => {
+      try {
+        const response = await fetch('/levels/0-0.txt');
+        if (!response.ok) {
+          throw new Error('Failed to load baseline level');
+        }
+        const textData = await response.text();
+        setBoard(parseTextLevel(textData));
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    loadBaselineLevel();
+  }, []);
 
   // websocket for chat and turn stuff, dummy data for now.
   useEffect(() => {
@@ -203,33 +207,6 @@ export function Play() {
     } finally {
       setLoading(false);
     }
-  };
-
-  // Handler for uploading a custom text level file
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const textContent = event.target.result;
-        const customBoard = parseTextLevel(textContent);
-        setBoard(customBoard);
-        setSelectedSquare(null);
-        setActiveAbility(null);
-        setTurn('white');
-        setPuzzleData(null);
-
-        setChatMessages(prev => [
-          ...prev.slice(-4),
-          { from: 'System', text: `Loaded custom level from ${file.name}!` }
-        ]);
-      } catch (err) {
-        setError('Failed to parse text level file.');
-      }
-    };
-    reader.readAsText(file);
   };
 
   const handleSquareClick = (rowIndex, colIndex) => {
@@ -295,19 +272,13 @@ export function Play() {
 
   return (
     <main className="main-content play-layout">
-      <div className="position-absolute end-0 top-50 translate-middle-y me-2 d-flex flex-column gap-2">
-        <button 
-          className="btn btn-sm btn-outline-warning text-white"
-          onClick={fetchDailyPuzzle}
-          disabled={loading}
-        >
-          {loading ? 'Loading...' : 'Daily Puzzle'}
-        </button>
-        <label className="btn btn-sm btn-outline-info text-white mb-0" style={{ cursor: 'pointer' }}>
-          Upload Level .txt
-          <input type="file" accept=".txt" onChange={handleFileUpload} style={{ display: 'none' }} />
-        </label>
-      </div>
+      <button 
+        className="btn btn-sm btn-outline-warning text-white position-absolute end-0 top-50 translate-middle-y me-2"
+        onClick={fetchDailyPuzzle}
+        disabled={loading}
+      >
+        {loading ? 'Loading...' : 'Daily Puzzle'}
+      </button>
 
       <div className="game-status">
         Player: <span className="highlight me-3">{username}</span>
