@@ -286,3 +286,75 @@ body {
   color: #ff0000;
   font-weight: bold;
 }
+
+/* login / create button */
+.header-auth .btn {
+  background-color: #c0c0c0 !important;
+  color: #000000 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.header-auth .btn:active {
+  border-top: 2px solid #404040 !important;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  padding-top: 3px !important;
+}
+
+/* Base retro bevel for Echo and Ignite buttons */
+.btn-echo, .btn-ignite {
+  font-family: 'Press Start 2P', monospace !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #404040 !important;
+  border-bottom: 2px solid #404040 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-size: 0.75rem !important;
+}
+
+/* Echo: Blue */
+.btn-echo {
+  background-color: #0000aa !important;
+  color: #ffffff !important;
+}
+
+/* Ignite: Red */
+.btn-ignite {
+  background-color: #aa0000 !important;
+  color: #ffffff !important;
+}
+
+/* Pressed / Active Toggle States */
+.btn-echo:active, .btn-ignite:active {
+  border-top: 2px solid #404040 !important;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+}
+
+/* When Echo ability is selected/active */
+.btn-echo.btn-warning {
+  background-color: #00ffff !important;
+  color: #000000 !important;
+  border-top: 2px solid #404040 !important;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+}
+
+/* When Ignite ability is selected/active */
+.btn-ignite.btn-danger {
+  background-color: #ff4500 !important;
+  color: #ffffff !important;
+  border-top: 2px solid #404040 !important;
+  border-left: 2px solid #404040 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+}

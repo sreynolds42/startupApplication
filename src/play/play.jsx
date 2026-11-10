@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { executeMove } from './gameLogic'; // or './gameLogic' depending on your folder path
 
 const baseStats = {
@@ -101,7 +101,7 @@ export function Play() {
   const [board, setBoard] = useState(Array(8).fill(null).map(() => Array(8).fill(null)));
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [turn, setTurn] = useState('white');
-  const [activeAbility, setActiveAbility] = useState(null);
+  const [activeAbility, setActiveAbility] = useState('echo');
   
   // State to track active explosions: array of { id, row, col }
   const [explosions, setExplosions] = useState([]);
@@ -110,6 +110,15 @@ export function Play() {
   const [chatMessages, setChatMessages] = useState([
     { from: 'System', text: 'Connected to match lobby.' }
   ]);
+
+  // Ref for auto-scrolling only the chat feed box
+  const feedContainerRef = useRef(null);
+
+  useEffect(() => {
+    if (feedContainerRef.current) {
+      feedContainerRef.current.scrollTop = feedContainerRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
 
   // reads the current user and gets their username, if not it's guest
   const username = localStorage.getItem('userName') || 'Guest';
@@ -221,7 +230,7 @@ export function Play() {
         setBoard(puzzleBoard);
         setTurn(puzzleTurn);
         setSelectedSquare(null);
-        setActiveAbility(null);
+        setActiveAbility('echo');
 
         setChatMessages(prev => [
           ...prev.slice(-4),
@@ -343,7 +352,6 @@ export function Play() {
 
     setBoard(newBoard);
     setSelectedSquare(null);
-    setActiveAbility(null);
     setTurn(prev => (prev === 'white' ? 'black' : 'white'));
   };
 
@@ -366,7 +374,6 @@ export function Play() {
       {puzzleData && (
         <section className="card bg-dark border-warning my-2 text-start small">
           <h4 className="h6 text-warning mb-1">Puzzle Rating: {puzzleData.puzzle.rating}</h4>
-          <p className="mb-0">Solution: {puzzleData.puzzle.solution.join(' → ')}</p>
         </section>
       )}
 
@@ -448,14 +455,14 @@ export function Play() {
         <button 
           type="button" 
           className={`btn btn-lg text-white fw-bold btn-echo ${activeAbility === 'echo' ? 'btn-warning text-dark' : ''}`}
-          onClick={() => setActiveAbility(prev => (prev === 'echo' ? null : 'echo'))}
+          onClick={() => setActiveAbility('echo')}
         >
           Echo
         </button>
         <button 
           type="button" 
           className={`btn btn-lg text-white fw-bold btn-ignite ${activeAbility === 'ignite' ? 'btn-danger' : ''}`}
-          onClick={() => setActiveAbility(prev => (prev === 'ignite' ? null : 'ignite'))}
+          onClick={() => setActiveAbility('ignite')}
         >
           Ignite
         </button>
@@ -463,7 +470,7 @@ export function Play() {
 
       {/* Dynamic WebSocket Chat Feed */}
       <section className="card websocket-card">
-        <div className="feed-box text-start small">
+        <div className="feed-box text-start small" ref={feedContainerRef} style={{ overflowY: 'auto' }}>
           {chatMessages.map((msg, index) => (
             <p key={index} className="ws-msg mb-1">
               <strong>{msg.from}:</strong> {msg.text}
