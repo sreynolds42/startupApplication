@@ -26,7 +26,6 @@ const pieceMap = {
 };
 
 // this function is for the lichess API that turns the string they give into the array to update the board
-// it doesn't actually update the board position yet, so i'll implement that later
 const parseFenToBoard = (fen) => {
   const newBoard = Array(8).fill(null).map(() => Array(8).fill(null));
   const [position, activeColor] = fen.split(' ');
@@ -103,6 +102,9 @@ export function Play() {
   const [selectedSquare, setSelectedSquare] = useState(null);
   const [turn, setTurn] = useState('white');
   const [activeAbility, setActiveAbility] = useState(null);
+  
+  // State to track active explosions: array of { id, row, col }
+  const [explosions, setExplosions] = useState([]);
 
   // Mock WebSocket Chat state
   const [chatMessages, setChatMessages] = useState([
@@ -178,8 +180,25 @@ export function Play() {
     return () => clearInterval(interval);
   }, []);
 
- 
-  // Fetching the daily puzzle from Lichess
+  // Helper to trigger explosions on specific squares
+  const triggerExplosions = (coordsList) => {
+    if (!coordsList || coordsList.length === 0) return;
+    
+    const newExplosions = coordsList.map(c => ({
+      id: `${c.row}-${c.col}-${Date.now()}-${Math.random()}`,
+      row: c.row,
+      col: c.col
+    }));
+
+    setExplosions(prev => [...prev, ...newExplosions]);
+
+    // plays the gif for 700ms to keep ugly loops from happening
+    setTimeout(() => {
+      setExplosions(prev => prev.filter(exp => !newExplosions.some(ne => ne.id === exp.id)));
+    }, 700);
+  };
+
+  // this fetches the daily puzzle from lichess
   const fetchDailyPuzzle = async () => {
     setLoading(true);
     setError(null);
@@ -195,7 +214,6 @@ export function Play() {
 
       setPuzzleData(data);
 
-      // FEN is stored inside data.puzzle.fen, NOT data.game.fen
       if (data?.puzzle?.fen) {
         const { board: puzzleBoard, turn: puzzleTurn } =
           parseFenToBoard(data.puzzle.fen);
@@ -223,7 +241,6 @@ export function Play() {
     }
   };
 
-
   const handleSquareClick = (rowIndex, colIndex) => {
     const clickedPiece = board[rowIndex][colIndex];
 
@@ -247,7 +264,7 @@ export function Play() {
     const start = selectedSquare;
     const end = { row: rowIndex, col: colIndex };
 
-    // CALL THE CENTRALIZED LOGIC (which enforces movement rules!)
+    // Execute move and get the new board state
     const newBoard = executeMove(board, start, end, activeAbility);
 
     // If executeMove returned the exact same board, the move was illegal!
@@ -258,6 +275,51 @@ export function Play() {
       ]);
       setSelectedSquare(null);
       return;
+    }
+
+    // Detect destroyed pieces accurately:
+    const destroyedCoords = [];
+
+    const startPiece = board[start.row][start.col];
+    const targetPieceBefore = board[end.row][end.col];
+
+    // 1. Normal Capture: If the destination square had an enemy piece, it was destroyed/captured!
+    if (targetPieceBefore && targetPieceBefore.color !== startPiece.color) {
+      destroyedCoords.push({ row: end.row, col: end.col });
+    }
+
+    // 2. Scan the rest of the board for HP drops (<= 0) or AoE wipes
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        const oldPiece = board[r][c];
+        const newPiece = newBoard[r][c];
+
+        if (!oldPiece) continue;
+
+        const isStartingSquare = (r === start.row && c === start.col);
+        const isDestinationSquare = (r === end.row && c === end.col);
+
+        // Skip the destination square since we already handled normal captures above
+        if (isDestinationSquare) continue;
+
+        // Piece dropped to 0 or lower HP (via AoE / direct damage)
+        if (newPiece && newPiece.hp <= 0) {
+          if (!destroyedCoords.some(d => d.row === r && d.col === c)) {
+            destroyedCoords.push({ row: r, col: c });
+          }
+        }
+        // Piece vanished completely (null) anywhere else (excluding the start square)
+        else if (!newPiece && !isStartingSquare) {
+          if (!destroyedCoords.some(d => d.row === r && d.col === c)) {
+            destroyedCoords.push({ row: r, col: c });
+          }
+        }
+      }
+    }
+
+    // Trigger explosions on all destroyed piece locations
+    if (destroyedCoords.length > 0) {
+      triggerExplosions(destroyedCoords);
     }
 
     // Build action log text for the chat feed
@@ -310,7 +372,7 @@ export function Play() {
 
       {/* Board */}
       <section className="board-container">
-        <div className="chess-board">
+        <div className="chess-board" style={{ position: 'relative' }}>
           {board.map((rowArr, rowIndex) =>
             rowArr.map((cell, colIndex) => {
               const isDark = (rowIndex + colIndex) % 2 === 1;
@@ -354,6 +416,30 @@ export function Play() {
               );
             })
           )}
+
+          {/* Explosion GIF Overlays */}
+          {explosions.map(exp => {
+            const topPercent = (exp.row / 8) * 100;
+            const leftPercent = (exp.col / 8) * 100;
+
+            return (
+              <img
+                key={exp.id}
+                src={`/explosion.gif?v=${exp.id}`}
+                alt="explosion"
+                style={{
+                  position: 'absolute',
+                  top: `${topPercent}%`,
+                  left: `${leftPercent}%`,
+                  width: '12.5%',
+                  height: '12.5%',
+                  pointerEvents: 'none',
+                  zIndex: 10,
+                  objectFit: 'cover'  
+                }}
+              />
+            );
+          })}
         </div>
       </section>
 
