@@ -1,5 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+// awesome and cool quotes
+const retroQuotes = [
+  "Voted worst game of 2004!",
+  "Chess is for nerds, amirite????"
+];
 
 export function Login() {
   const [usernameInput, setUsernameInput] = useState('');
@@ -8,7 +14,14 @@ export function Login() {
     localStorage.getItem('userName') || ''
   );
   const [error, setError] = useState(null);
+  const [randomQuote, setRandomQuote] = useState('');
   const navigate = useNavigate();
+
+  // picks a random quote to display
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * retroQuotes.length);
+    setRandomQuote(retroQuotes[randomIndex]);
+  }, []);
 
   const loginUser = () => authenticate('/api/auth/login');
   const createUser = () => authenticate('/api/auth/create');
@@ -82,7 +95,14 @@ export function Login() {
       <div className="card hero-card">
         <img src="echoignitionLogoPlaceholder.png" alt="Echo Ignition Logo - Flamethrower Horse" className="app-logo" />
         <h2 className="text-white h5">Triumph over your enemies</h2>
-        <p className="text-white small mb-0">Welcome to echo ignition, the RPG chess game !</p>
+        <p className="text-white small mb-2">Welcome to echo ignition, the RPG chess game !</p>
+        
+        {/* Rotating retro blurb */}
+        <div style={{ border: '1px dashed #00ff00', background: '#000000', padding: '8px', marginTop: '10px' }}>
+          <p className="small mb-0" style={{ color: '#00ff00', fontSize: '0.6rem' }}>
+            &gt; SYSTEM_NOTE: &quot;{randomQuote}&quot;
+          </p>
+        </div>
       </div>
     </main>
   );

@@ -31,7 +31,9 @@ export default function App() {
     <BrowserRouter>
       <div className="body bg-dark text-light">
         <header className="top-banner">
-          <h1>ECHO IGNITION</h1>
+          <h1>
+            <span className="title-echo">ECHO</span> <span className="title-ignition">IGNITION</span>
+          </h1>
         </header>
 
         <Routes>
