@@ -4,7 +4,13 @@ import { useNavigate } from 'react-router-dom';
 // awesome and cool quotes
 const retroQuotes = [
   "Voted worst game of 2004!",
-  "Chess is for nerds, amirite????"
+  'Chess is for nerds, amirite????',
+  "So freakin' retro",
+  "Welcome to my video              game",
+  "What do you think of my drawing i spent a lot of time on it",
+  "I think it has a trojan",
+  "So tuff",
+  "in loving memory"
 ];
 
 export function Login() {
@@ -94,13 +100,13 @@ export function Login() {
       </div>
       <div className="card hero-card">
         <img src="echoignitionLogoPlaceholder.png" alt="Echo Ignition Logo - Flamethrower Horse" className="app-logo" />
-        <h2 className="text-white h5">Triumph over your enemies</h2>
-        <p className="text-white small mb-2">Welcome to echo ignition, the RPG chess game !</p>
+        <h2 className="text-black h5">Triumph over your enemies</h2>
+        <p className="text-black small mb-2">Welcome to echo ignition, the RPG chess game !</p>
         
         {/* Rotating retro blurb */}
         <div style={{ border: '1px dashed #00ff00', background: '#000000', padding: '8px', marginTop: '10px' }}>
-          <p className="small mb-0" style={{ color: '#00ff00', fontSize: '0.6rem' }}>
-            &gt; SYSTEM_NOTE: &quot;{randomQuote}&quot;
+          <p className="small mb-0" style={{ color: '#00ff00', fontSize: '0.6rem', whiteSpace: 'pre' }}>
+           {randomQuote}
           </p>
         </div>
       </div>
