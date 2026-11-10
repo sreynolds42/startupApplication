@@ -10,28 +10,44 @@
 
 body {
   font-family: 'Press Start 2P', monospace, cursive;
-  background-color: #121212;
-  color: #f1f1f1;
+  background-color: #000066;
+  background-image: url('https://web.archive.org/web/20090830064430/http:../../geocities.com/Area51/Stargate/8061/starbg.gif');
+  color: #00ff00;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
-/* banner header and login */
+/* banner header and login - Win95 style */
 .top-banner {
-  background-color: #1e1e24;
+  background-color: #c0c0c0;
+  color: #000000;
   text-align: center;
   padding: 0.75rem 0.5rem;
-  border-bottom: 2px solid #333;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  border-top: 3px solid #ffffff;
+  border-left: 3px solid #ffffff;
+  border-right: 3px solid #808080;
+  border-bottom: 3px solid #808080;
+  box-shadow: 4px 4px 0px #000000;
   position: relative;
 }
 
 .top-banner h1 {
-  font-size: 1.5rem;
-  letter-spacing: 1.5px;
-  color: #e2b714;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
   text-transform: uppercase;
+}
+
+/* Split title coloring classes */
+.title-echo {
+  color: #00ffff;
+  text-shadow: 2px 2px #800080;
+}
+
+.title-ignition {
+  color: #ff0000;
+  text-shadow: 2px 2px #ffff00;
 }
 
 .header-auth {
@@ -40,11 +56,15 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 0.3rem;
+  width: 100%;
 }
 
 .user-badge {
-  font-size: 0.75rem;
-  color: #a0a0a0;
+  font-size: 0.65rem;
+  color: #00ff00;
+  background: #000000;
+  padding: 2px 6px;
+  border: 1px inset #ffffff;
 }
 
 /* makes the username bold */
@@ -53,13 +73,19 @@ body {
 }
 
 .game-status {
-  font-size: 0.85rem;
-  color: #ffffff;
+  font-size: 0.75rem;
+  color: #00ff00;
+  background-color: #000000;
+  border: 2px inset #ffffff;
+  padding: 4px;
   margin-top: 0.25rem;
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
 }
 
 .highlight {
-  color: #e2b714;
+  color: #ffff00;
 }
 
 /* Main content and the layout of cards */
@@ -68,15 +94,21 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.25rem;
+  padding: 1rem;
   margin-bottom: 90px;
+  width: 100%;
+  max-width: 100vw;
 }
 
 .card {
-  background-color: #1e1e24;
-  padding: 1.25rem;
-  border-radius: 10px;
-  border: 1px solid #2a2a32;
+  background-color: #c0c0c0;
+  color: #000000;
+  padding: 1rem;
+  border-top: 3px solid #ffffff;
+  border-left: 3px solid #ffffff;
+  border-right: 3px solid #808080;
+  border-bottom: 3px solid #808080;
+  box-shadow: 4px 4px 0px #000000;
   margin-bottom: 1rem;
   width: 100%;
   max-width: 400px;
@@ -88,22 +120,30 @@ body {
 
 .app-logo {
   width: 100%;
-  max-width: 280px;    
+  max-width: 240px;    
   height: auto;       
-  border-radius: 8px;
-  border: 1px solid #333;
+  border: 2px inset #ffffff;
   display: block;
   margin: 0 auto 0.75rem auto;
 }
 
-/*play.html*/
+/* play layout scaling & board wrapper */
+.board-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+
 .chess-board {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
   width: 100%;
-  max-width: 480px; 
+  max-width: min(85vw, 400px);
   aspect-ratio: 1 / 1;
+  border: 4px ridge #ffffff;
+  background-color: #808080;
 }
 
 .square {
@@ -111,56 +151,63 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-size: 4.0rem;
+  font-size: clamp(1.5rem, 7vw, 3rem);
   min-width: 0;
   overflow: hidden;
 }
 
 .dark {
-  background-color: #b58863;
-  color: #000;
+  background-color: #8b4513;
+  color: #ffcc00;
 }
 
 .light {
-  background-color: #f0d9b5;
-  color: #000;
+  background-color: #deb887;
+  color: #000000;
 }
 
 /* WebSocket Feed Box */
 .feed-box {
-  background: #121212;
+  background: #000000;
+  color: #00ff00;
   padding: 0.5rem;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  height: 80px;
+  font-size: 0.65rem;
+  height: 90px;
   overflow-y: auto;
-  border: 1px solid #2a2a32;
+  border: 2px inset #ffffff;
+  width: 100%;
+  max-width: 400px;
 }
 
 .ws-msg {
-  color: #4caf50;
+  color: #00ff00;
   margin-bottom: 0.25rem;
 }
 
-/* makes boostrap stuff yellow */
+/* makes bootstrap stuff yellow / retro fitted */
 .table th {
-  color: #e2b714 !important;
+  color: #ffff00 !important;
 }
 
-/* help.html */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* help.html & footer */
 .site-footer {
-  background-color: #121212;
+  background-color: #000000;
   text-align: center;
   padding: 1rem 0.75rem;
-  font-size: 0.8rem;
-  color: #888;
-  border-top: 1px solid #222;
-  margin-bottom: 80px;
+  font-size: 0.65rem;
+  color: #00ff00;
+  border-top: 2px dashed #ff00ff;
+  margin-bottom: 70px;
   width: 100%;
 }
 
 .site-footer a {
-  color: #e2b714;
+  color: #ffff00;
   text-decoration: none;
 }
 
@@ -168,59 +215,71 @@ body {
   text-decoration: underline;
 }
 
-/* nav bar in the bottom*/
+/* nav bar in the bottom - mobile friendly flex */
 .bottom-banner {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: #1e1e24;
-  border-top: 2px solid #333;
+  background-color: #c0c0c0;
+  border-top: 3px solid #ffffff;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 0.75rem 1rem;
-  gap: 0.5rem;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+  padding: 0.5rem;
+  gap: 0.3rem;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.8);
   z-index: 100;
 }
 
 .nav-btn {
   text-decoration: none;
   font-weight: bold;
-  border-radius: 8px;
   text-align: center;
-  transition: transform 0.1s ease, background-color 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #c0c0c0;
+  color: #000000;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  font-family: 'Press Start 2P', monospace;
 }
 
 .nav-btn:active {
-  transform: scale(0.96);
+  border-top: 2px solid #404040;
+  border-left: 2px solid #404040;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  padding-top: 2px;
 }
 
 .btn-secondary {
   flex: 1;
-  background-color: #2b2d42;
-  color: #edf2f4;
-  padding: 0.75rem 0.5rem;
-  font-size: 0.9rem;
-}
-
-.btn-secondary:hover {
-  background-color: #3d405b;
+  padding: 0.5rem 0.2rem;
+  font-size: 0.65rem;
 }
 
 .btn-primary {
   flex: 1.5;
-  background-color: #e2b714;
-  color: #121212;
-  padding: 1.1rem 0.5rem;
-  font-size: 1.2rem;
+  background-color: #c0c0c0;
+  color: #000000;
+  padding: 0.6rem 0.2rem;
+  font-size: 0.75rem;
   letter-spacing: 1px;
 }
 
-.btn-primary:hover {
-  background-color: #f7d036;
+/* Utility Animations */
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.blink-text {
+  animation: blink 0.8s infinite;
+  color: #ff0000;
+  font-weight: bold;
 }
