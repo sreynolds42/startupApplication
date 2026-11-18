@@ -10,7 +10,7 @@ Normal chess gets boring when people take forever to move. Echo Ignition adds bu
 
 ### Design
 
-![Design image](echoignitionLogoPlaceholder.png)
+![Design image](public/echoignitionLogoPlaceholder.png)
 
 ```mermaid
 sequenceDiagram
