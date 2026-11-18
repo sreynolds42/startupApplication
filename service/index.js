@@ -2,12 +2,26 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const express = require('express');
 const uuid = require('uuid');
+const { MongoClient } = require('mongodb');
+const config = require('./dbConfig.json');
 const app = express();
 
 const authCookieName = 'token';
 
-let users = [];
-let statsData = {}; // In-memory stats storage per user
+const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
+const client = new MongoClient(url);
+const db = client.db('startup');
+const userCollection = db.collection('user');
+const statsCollection = db.collection('stats');
+
+(async function testConnection() {
+  try {
+    await db.command({ ping: 1 });
+  } catch (ex) {
+    console.log(`Unable to connect to database with ${url} because ${ex.message}`);
+    process.exit(1);
+  }
+})();
 
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
@@ -35,6 +49,7 @@ apiRouter.post('/auth/login', async (req, res) => {
   if (user) {
     if (await bcrypt.compare(req.body.password, user.password)) {
       user.token = uuid.v4();
+      await userCollection.updateOne({ email: user.email }, { $set: { token: user.token } });
       setAuthCookie(res, user.token);
       res.send({ email: user.email });
       return;
@@ -47,7 +62,7 @@ apiRouter.post('/auth/login', async (req, res) => {
 apiRouter.delete('/auth/logout', async (req, res) => {
   const user = await findUser('token', req.cookies[authCookieName]);
   if (user) {
-    delete user.token;
+    await userCollection.updateOne({ email: user.email }, { $unset: { token: '' } });
   }
   res.clearCookie(authCookieName);
   res.status(204).end();
@@ -66,21 +81,28 @@ const verifyAuth = async (req, res, next) => {
 // Get User Stats
 apiRouter.get('/stats', verifyAuth, async (req, res) => {
   const user = await findUser('token', req.cookies[authCookieName]);
-  const stats = statsData[user.email] || {
-    wins: 0,
-    losses: 0,
-    totalDamage: 0,
-    piecesDestroyed: 0,
-    pieceKills: { Pawn: 0, Knight: 0, Bishop: 0, Rook: 0, Queen: 0 }
-  };
+  let stats = await statsCollection.findOne({ email: user.email });
+  if (!stats) {
+    stats = {
+      wins: 0,
+      losses: 0,
+      totalDamage: 0,
+      piecesDestroyed: 0,
+      pieceKills: { Pawn: 0, Knight: 0, Bishop: 0, Rook: 0, Queen: 0 }
+    };
+  }
   res.send(stats);
 });
 
 // Update User Stats
 apiRouter.post('/stats', verifyAuth, async (req, res) => {
   const user = await findUser('token', req.cookies[authCookieName]);
-  statsData[user.email] = req.body;
-  res.send(statsData[user.email]);
+  await statsCollection.updateOne(
+    { email: user.email },
+    { $set: req.body },
+    { upsert: true }
+  );
+  res.send(req.body);
 });
 
 // Default error handler
@@ -100,13 +122,13 @@ async function createUser(email, password) {
     password: passwordHash,
     token: uuid.v4(),
   };
-  users.push(user);
+  await userCollection.insertOne(user);
   return user;
 }
 
 async function findUser(field, value) {
   if (!value) return null;
-  return users.find((u) => u[field] === value);
+  return userCollection.findOne({ [field]: value });
 }
 
 function setAuthCookie(res, authToken) {
