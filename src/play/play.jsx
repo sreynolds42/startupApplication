@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { executeMove } from './gameLogic'; // or './gameLogic' depending on your folder path
+import { executeMove } from './gameLogic';
 
 const baseStats = {
   pawn:   { hp: 5, maxHp: 5, attack: 3 },
@@ -123,29 +123,38 @@ export function Play() {
   // reads the current user and gets their username, if not it's guest
   const username = localStorage.getItem('userName') || 'Guest';
 
-  // this updates the stats of the players as stuff goes on
-  const updatePlayerStats = (damageDealt, pieceDestroyed = null) => {
+  // this updates the stats of the players as stuff goes on via fetch to MongoDB backend
+  const updatePlayerStats = async (damageDealt, pieceDestroyed = null) => {
     if (username === 'Guest') return; // only tracks for logged in players
 
-    const statsKey = `stats_${username}`;
-    const existingStats = JSON.parse(localStorage.getItem(statsKey)) || {
-      wins: 0,
-      losses: 0,
-      totalDamage: 0,
-      piecesDestroyed: 0,
-      pieceKills: { Pawn: 0, Knight: 0, Bishop: 0, Rook: 0, Queen: 0 }
-    };
+    try {
+      // 1. Fetch current stats from backend database
+      const res = await fetch('/api/stats');
+      if (!res.ok) return;
+      const existingStats = await res.json();
 
-    existingStats.totalDamage += damageDealt;
-    if (pieceDestroyed) {
-      existingStats.piecesDestroyed += 1;
-      const pieceName = pieceDestroyed.type.charAt(0).toUpperCase() + pieceDestroyed.type.slice(1);
-      if (existingStats.pieceKills[pieceName] !== undefined) {
-        existingStats.pieceKills[pieceName] += 1;
+      // Ensure expected structure defaults
+      existingStats.totalDamage = (existingStats.totalDamage || 0) + damageDealt;
+      if (pieceDestroyed) {
+        existingStats.piecesDestroyed = (existingStats.piecesDestroyed || 0) + 1;
+        const pieceName = pieceDestroyed.type.charAt(0).toUpperCase() + pieceDestroyed.type.slice(1);
+        if (!existingStats.pieceKills) {
+          existingStats.pieceKills = { Pawn: 0, Knight: 0, Bishop: 0, Rook: 0, Queen: 0 };
+        }
+        if (existingStats.pieceKills[pieceName] !== undefined) {
+          existingStats.pieceKills[pieceName] += 1;
+        }
       }
-    }
 
-    localStorage.setItem(statsKey, JSON.stringify(existingStats));
+      // 2. Push updated stats back to backend endpoint for upsert
+      await fetch('/api/stats', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(existingStats)
+      });
+    } catch (err) {
+      console.error('Failed to update player stats:', err);
+    }
   };
 
   // Load baseline level from levels/0-0.txt on mount
@@ -295,6 +304,8 @@ export function Play() {
     // 1. Normal Capture: If the destination square had an enemy piece, it was destroyed/captured!
     if (targetPieceBefore && targetPieceBefore.color !== startPiece.color) {
       destroyedCoords.push({ row: end.row, col: end.col });
+      // Update stats for normal capture damage/kill
+      updatePlayerStats(targetPieceBefore.hp > 0 ? targetPieceBefore.hp : 5, targetPieceBefore);
     }
 
     // 2. Scan the rest of the board for HP drops (<= 0) or AoE wipes
@@ -315,12 +326,14 @@ export function Play() {
         if (newPiece && newPiece.hp <= 0) {
           if (!destroyedCoords.some(d => d.row === r && d.col === c)) {
             destroyedCoords.push({ row: r, col: c });
+            updatePlayerStats(oldPiece.hp, oldPiece);
           }
         }
         // Piece vanished completely (null) anywhere else (excluding the start square)
         else if (!newPiece && !isStartingSquare) {
           if (!destroyedCoords.some(d => d.row === r && d.col === c)) {
             destroyedCoords.push({ row: r, col: c });
+            updatePlayerStats(oldPiece.hp, oldPiece);
           }
         }
       }
