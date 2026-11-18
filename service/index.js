@@ -28,7 +28,7 @@ const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../public')));
 
 var apiRouter = express.Router();
 app.use(`/api`, apiRouter);
@@ -113,7 +113,7 @@ app.use(function (err, req, res, next) {
 
 // Return the application's default page if unknown
 app.use((_req, res) => {
-  res.sendFile('index.html', { root: path.join(__dirname, 'public') });
+  res.sendFile('index.html', { root: path.join(__dirname, '../public') });
 });
 
 async function createUser(email, password) {
